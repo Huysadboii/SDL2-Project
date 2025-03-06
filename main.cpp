@@ -64,13 +64,16 @@ void close(){
     SDL_Quit();
 }
 
+
 int main(int argc, char* argv[])
 {
+    int frameDelay = 1000 / FPS;
     if(InitData() == false){ return -1; }
     if(loadBackground() == false){ return -1; }
 
     bool is_quit = false;
     while(!is_quit){
+        Uint32 frameStart = SDL_GetTicks();
         while(SDL_PollEvent(&g_event) != 0){
             if(g_event.type == SDL_QUIT){
                 is_quit = true;
@@ -83,10 +86,15 @@ int main(int argc, char* argv[])
             RENDER_DRAW_COLOR, 
             RENDER_DRAW_COLOR
         );
+        
         SDL_RenderClear(g_screen); // refresh screen before loading new image
 
         g_background.Render(g_screen, NULL);
         SDL_RenderPresent(g_screen);
+        Uint32 frameTime = SDL_GetTicks() - frameStart;
+        if(frameDelay > frameTime){
+            SDL_Delay(frameDelay - frameTime);
+        }
     }
 
     close();
