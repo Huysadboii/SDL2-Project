@@ -1,6 +1,7 @@
 #include "header/constant.h"
 #include "header/BaseObject.h"
 #include "header/GameMap.h"
+#include "header/Player.h"
 using namespace std;
 
 BaseObject g_background;
@@ -77,14 +78,21 @@ int main(int argc, char* argv[])
     game_map.LoadMap((char*)mapStructure.c_str());
     game_map.LoadTiles(g_screen);
 
+    Player player;
+    player.LoadImg("img//player_right.png", g_screen);
+    player.set_clips(); // hieu ung chuyen dong
+
     bool is_quit = false;
     while(!is_quit){
 
         Uint32 frameStart = SDL_GetTicks();
         while(SDL_PollEvent(&g_event) != 0){
+
             if(g_event.type == SDL_QUIT){
                 is_quit = true;
             }
+
+            player.Handle_Input_Action(g_event, g_screen);
         }
 
         SDL_SetRenderDrawColor(
@@ -98,13 +106,14 @@ int main(int argc, char* argv[])
         SDL_RenderClear(g_screen);
         g_background.Render(g_screen, NULL);
         game_map.DrawMap(g_screen);
+        player.Show(g_screen);
         SDL_RenderPresent(g_screen);
 
         Uint32 frameTime = SDL_GetTicks() - frameStart;
         if(frameDelay > frameTime){
             SDL_Delay(frameDelay - frameTime);
         }
-        
+
     }
 
     close();

@@ -30,7 +30,7 @@ static SDL_Event g_event;
 #define MAX_MAP_X 400
 #define MAX_MAP_Y 10
 
- struct Map{
+struct Map{
     int start_x_;
     int start_y_;
 
@@ -40,4 +40,13 @@ static SDL_Event g_event;
     int tile[MAX_MAP_Y][MAX_MAP_X];
     char* file_name_;
 };
+
+struct Input{
+    int left_;
+    int right_;
+    int up_;
+    int down_;
+    int jump_;
+};
+
 #endif

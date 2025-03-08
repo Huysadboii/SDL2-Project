@@ -53,7 +53,6 @@ void GameMap::LoadTiles(SDL_Renderer* screen){
 }
 
 // fill hinh anh vao cac o vuong
-// cpl
 void GameMap::DrawMap(SDL_Renderer* screen){
     int x1=0; //fill tu dau den dau
     int x2=0;
