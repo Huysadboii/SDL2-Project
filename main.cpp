@@ -3,7 +3,6 @@
 #include "header/GameMap.h"
 #include "header/Player.h"
 using namespace std;
-
 BaseObject g_background;
 
 // initialize SDL environment
@@ -47,12 +46,10 @@ bool InitData(){
     }
     return success;
 }
-
 bool loadBackground(){
     bool ret = g_background.LoadImg("img//background.png", g_screen);
     return ret;
 }
-
 void close(){
     g_background.Free();
 
@@ -106,9 +103,12 @@ int main(int argc, char* argv[])
         SDL_RenderClear(g_screen);
         g_background.Render(g_screen, NULL);
         game_map.DrawMap(g_screen);
-        player.Show(g_screen);
-        SDL_RenderPresent(g_screen);
 
+        Map map_data = game_map.getMap();
+        player.DoPlayer(map_data);
+        player.Show(g_screen);
+        
+        SDL_RenderPresent(g_screen);
         Uint32 frameTime = SDL_GetTicks() - frameStart;
         if(frameDelay > frameTime){
             SDL_Delay(frameDelay - frameTime);

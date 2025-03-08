@@ -16,19 +16,22 @@ static SDL_Event g_event;
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 640
 #define SCREEN_BPP 32
-
 // color code to neutralize character
 #define COLOR_KEY_R 167
 #define COLOR_KEY_G 175
 #define COLOR_KEY_B 180
-
 #define RENDER_DRAW_COLOR 255
 #define FPS 60
-
-//map: co 10 hang va 400 cot
+//map properties
 #define TILE_SIZE 64
 #define MAX_MAP_X 400
 #define MAX_MAP_Y 10
+#define MAX_TILES 20 // number of block's type
+#define BLANK_TILE 0
+// physical properties
+#define GRAVITY_SPEED 0.8
+#define MAX_FALL_SPEED 10
+#define PLAYER_SPEED 5
 
 struct Map{
     int start_x_;

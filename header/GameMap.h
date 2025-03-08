@@ -4,8 +4,6 @@
 #include "constant.h"
 #include "BaseObject.h"
 
-#define MAX_TILES 20 // so loai o vuong
-
 // map cung la vat the nen ke thua BaseObject
 class TiteMat : public BaseObject{
     public:
@@ -25,6 +23,7 @@ class GameMap{
     void LoadTiles(SDL_Renderer* screen);
     // ve map
     void DrawMap(SDL_Renderer* screen);
+    Map getMap() {return game_map_;}
 
     private:
     Map game_map_; // thong tin ve ban do

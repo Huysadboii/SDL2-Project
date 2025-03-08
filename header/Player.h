@@ -19,8 +19,10 @@ class Player : public BaseObject{
         void Show(SDL_Renderer* des);
         void Handle_Input_Action(SDL_Event events, SDL_Renderer* screen);
         void set_clips();
-
         
+        void DoPlayer(Map& map_data);
+        // detect collision between player and map
+        void CheckToMap(Map& map_data);
 
     private:
         float x_val_; // vi tri di chuyen theo phuong x
@@ -36,6 +38,7 @@ class Player : public BaseObject{
         Input input_type_; // bien luu trang thai player
         int frame_;
         int status_; // trang thai cua player: trai hay phai
+        bool on_ground_; // check player co tren mat dat hay khong
 };
 
 #endif
