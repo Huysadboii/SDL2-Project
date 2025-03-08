@@ -4,6 +4,7 @@
 using namespace std;
 
 #include "constant.h"
+// class tao hinh anh cho vat the
 class BaseObject
 {
     public:

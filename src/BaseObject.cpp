@@ -18,8 +18,10 @@ bool BaseObject::LoadImg(string path, SDL_Renderer* screen){
     SDL_Surface* load_surface = IMG_Load(path.c_str());
     if(load_surface != NULL){
         // display character on background
-        SDL_SetColorKey(load_surface, SDL_TRUE, SDL_MapRGB(load_surface->format,
-            COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B));
+        SDL_SetColorKey(load_surface,
+            SDL_TRUE, 
+            SDL_MapRGB(load_surface->format, COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B)
+        );
         new_texture = SDL_CreateTextureFromSurface(screen, load_surface);
         if(new_texture != NULL){
             rect_.w = load_surface->w;

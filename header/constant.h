@@ -13,15 +13,31 @@ static SDL_Renderer* g_screen = NULL;
 static SDL_Event g_event;
 
 //screen
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 640;
-const int SCREEN_BPP = 32;
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 640
+#define SCREEN_BPP 32
+
 // color code to neutralize character
-const int COLOR_KEY_R = 167;
-const int COLOR_KEY_G = 175;
-const int COLOR_KEY_B = 180;
+#define COLOR_KEY_R 167
+#define COLOR_KEY_G 175
+#define COLOR_KEY_B 180
 
-const int RENDER_DRAW_COLOR = 255;
-int FPS = 60;
+#define RENDER_DRAW_COLOR 255
+#define FPS 60
 
+//map: co 10 hang va 400 cot
+#define TILE_SIZE 64
+#define MAX_MAP_X 400
+#define MAX_MAP_Y 10
+
+ struct Map{
+    int start_x_;
+    int start_y_;
+
+    int max_x_;
+    int max_y_;
+
+    int tile[MAX_MAP_Y][MAX_MAP_X];
+    char* file_name_;
+};
 #endif

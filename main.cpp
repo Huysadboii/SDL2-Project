@@ -1,5 +1,6 @@
 #include "header/constant.h"
 #include "header/BaseObject.h"
+#include "header/GameMap.h"
 using namespace std;
 
 BaseObject g_background;
@@ -71,14 +72,21 @@ int main(int argc, char* argv[])
     if(InitData() == false){ return -1; }
     if(loadBackground() == false){ return -1; }
 
+    GameMap game_map; // create game map object
+    string mapStructure = "map/map01.dat";
+    game_map.LoadMap((char*)mapStructure.c_str());
+    game_map.LoadTiles(g_screen);
+
     bool is_quit = false;
     while(!is_quit){
+
         Uint32 frameStart = SDL_GetTicks();
         while(SDL_PollEvent(&g_event) != 0){
             if(g_event.type == SDL_QUIT){
                 is_quit = true;
             }
         }
+
         SDL_SetRenderDrawColor(
             g_screen, 
             RENDER_DRAW_COLOR, 
@@ -87,14 +95,16 @@ int main(int argc, char* argv[])
             RENDER_DRAW_COLOR
         );
         
-        SDL_RenderClear(g_screen); // refresh screen before loading new image
-
+        SDL_RenderClear(g_screen);
         g_background.Render(g_screen, NULL);
+        game_map.DrawMap(g_screen);
         SDL_RenderPresent(g_screen);
+
         Uint32 frameTime = SDL_GetTicks() - frameStart;
         if(frameDelay > frameTime){
             SDL_Delay(frameDelay - frameTime);
         }
+        
     }
 
     close();
