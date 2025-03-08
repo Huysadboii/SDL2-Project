@@ -23,11 +23,14 @@ class Player : public BaseObject{
         void DoPlayer(Map& map_data);
         // detect collision between player and map
         void CheckToMap(Map& map_data);
+        void SetMapXY(const int map_x, const int map_y){map_x_ = map_x; map_y_ = map_y;};
+        // calculate map properties when player moves
+        void CenterEntityOnMap(Map& map_data);
 
     private:
         float x_val_; // vi tri di chuyen theo phuong x
         float y_val_;
-
+        
         float x_pos_; // vi tri hien tai cua player
         float y_pos_;
         
@@ -39,6 +42,10 @@ class Player : public BaseObject{
         int frame_;
         int status_; // trang thai cua player: trai hay phai
         bool on_ground_; // check player co tren mat dat hay khong
+
+        // luu vi tri ban do
+        int map_x_;
+        int map_y_;
 };
 
 #endif

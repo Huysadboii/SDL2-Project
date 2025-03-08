@@ -24,6 +24,7 @@ class GameMap{
     // ve map
     void DrawMap(SDL_Renderer* screen);
     Map getMap() {return game_map_;}
+    void SetMap(Map& map_data){game_map_ = map_data;};
 
     private:
     Map game_map_; // thong tin ve ban do

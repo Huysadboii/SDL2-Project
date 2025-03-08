@@ -1,5 +1,4 @@
 #include "../header/Player.h"
-// luu y link path cua anh
 
 Player::Player(){
     x_val_ = 0;
@@ -16,6 +15,8 @@ Player::Player(){
     input_type_.down_ = 0;
     input_type_.up_ = 0;
     on_ground_ = false;
+    map_x_ = 0;
+    map_y_ = 0;
 }
 
 Player::~Player(){
@@ -60,8 +61,8 @@ void Player::Show(SDL_Renderer* des){
         frame_ = 0;
     }
     
-    rect_.x = x_pos_;
-    rect_.y = y_pos_;
+    rect_.x = x_pos_ - map_x_;
+    rect_.y = y_pos_ - map_y_;
     
     SDL_Rect* current_clip = &frame_clip_[frame_];
     SDL_Rect renderQuad = {rect_.x, rect_.y, width_frame_, height_frame_};
@@ -116,6 +117,23 @@ void Player::DoPlayer(Map& map_data){
     }
 
     CheckToMap(map_data);
+    CenterEntityOnMap(map_data);
+}
+
+void Player::CenterEntityOnMap(Map& map_data){
+    map_data.start_x_ = x_pos_ - (SCREEN_WIDTH/2);
+    if(map_data.start_x_ < 0){ // di lui
+        map_data.start_x_ = 0;
+    } else if(map_data.start_x_ + SCREEN_WIDTH >= map_data.max_x_){
+        map_data.start_x_ = map_data.max_x_ - SCREEN_WIDTH;
+    }
+
+    map_data.start_y_ = y_pos_ - (SCREEN_HEIGHT/2);
+    if(map_data.start_y_ < 0){
+        map_data.start_y_ = 0;
+    } else if(map_data.start_y_ + SCREEN_HEIGHT >= map_data.max_y_){
+        map_data.start_y_ = map_data.max_y_ - SCREEN_HEIGHT;
+    }
 }
 
 void Player::CheckToMap(Map& map_data){
