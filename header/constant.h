@@ -29,9 +29,10 @@ static SDL_Event g_event;
 #define MAX_TILES 20 // number of block's type
 #define BLANK_TILE 0
 // physical properties
-#define GRAVITY_SPEED 0.8
+#define GRAVITY_SPEED 0.98
 #define MAX_FALL_SPEED 10
-#define PLAYER_SPEED 5
+#define PLAYER_JUMP_VAL 20
+#define PLAYER_SPEED 10
 
 struct Map{
     int start_x_;

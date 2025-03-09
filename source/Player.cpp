@@ -74,15 +74,18 @@ void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen){
     if(events.type == SDL_KEYDOWN){
 
         switch(events.key.keysym.sym){
-            case SDLK_RIGHT:
+            case SDLK_d:
                 status_ = WALK_RIGHT;
                 input_type_.right_ = 1;
                 input_type_.left_ = 0;
                 break;
-            case SDLK_LEFT:
+            case SDLK_a:
                 status_ = WALK_LEFT;
                 input_type_.left_ = 1;
                 input_type_.right_ = 0;
+                break;
+            case SDLK_SPACE:
+                input_type_.jump_ = 1;
                 break;
         }
 
@@ -91,10 +94,10 @@ void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen){
     else if(events.type == SDL_KEYUP){
 
         switch(events.key.keysym.sym){
-            case SDLK_RIGHT:
+            case SDLK_d:
                 input_type_.right_ = 0;
                 break;
-            case SDLK_LEFT:
+            case SDLK_a:
                 input_type_.left_ = 0;
                 break;
         }
@@ -114,6 +117,14 @@ void Player::DoPlayer(Map& map_data){
         x_val_ -= PLAYER_SPEED;
     } else if(input_type_.right_ == 1){
         x_val_ += PLAYER_SPEED;
+    }
+
+    if(input_type_.jump_ == 1){
+        if(on_ground_ == true){
+            y_val_ = -PLAYER_JUMP_VAL;
+            on_ground_ = false;
+        }
+        input_type_.jump_ = 0;
     }
 
     CheckToMap(map_data);
