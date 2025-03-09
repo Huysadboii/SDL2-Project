@@ -112,7 +112,7 @@ void Player::DoPlayer(Map& map_data){
 
     if(come_back_time_ == 0){
         x_val_ = 0;
-        y_val_ += GRAVITY_SPEED;
+        y_val_ += GRAVITY;
 
         if(y_val_ >= MAX_FALL_SPEED){
             y_val_ = MAX_FALL_SPEED;
@@ -141,9 +141,9 @@ void Player::DoPlayer(Map& map_data){
 
         if(come_back_time_ == 0){
 
-            if(x_pos_ > 5*TILE_SIZE){
-                x_pos_ -= 5*TILE_SIZE;
-                map_x_ -= 5*TILE_SIZE;
+            if(x_pos_ > 9*TILE_SIZE){
+                x_pos_ -= 9*TILE_SIZE;
+                map_x_ -= 9*TILE_SIZE;
             } else {
                 x_pos_ = 0;
             }

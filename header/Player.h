@@ -11,7 +11,7 @@ class Player : public BaseObject{
         ~Player();
         enum WalkType{
             WALK_RIGHT = 0,
-            WALK_LEFT = 1
+            WALK_LEFT = 1,
         };
         
         // kich thuoc player thong so rieng => khai bao lai

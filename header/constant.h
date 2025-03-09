@@ -29,7 +29,7 @@ static SDL_Event g_event;
 #define MAX_TILES 10 // number of block's type
 #define BLANK_TILE 0
 // properties for player
-#define GRAVITY_SPEED 0.98
+#define GRAVITY 0.98
 #define MAX_FALL_SPEED 10
 #define PLAYER_JUMP_VAL 20
 #define PLAYER_SPEED 10
