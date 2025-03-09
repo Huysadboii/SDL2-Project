@@ -2,8 +2,10 @@
 #define PLAYER_H_
 using namespace std;
 
+#include <vector>
 #include "constant.h"
-#include "BaseObject.h" // ban chat player la 1 object
+#include "BaseObject.h"
+#include "Bullet.h"
 
 class Player : public BaseObject{
     public:
@@ -26,8 +28,13 @@ class Player : public BaseObject{
         void SetMapXY(const int map_x, const int map_y){map_x_ = map_x; map_y_ = map_y;};
         // calculate map properties when player moves
         void CenterEntityOnMap(Map& map_data);
+        void set_bullet_list(vector<Bullet*> bullet_list){p_bullet_list_ = bullet_list;}
+        vector<Bullet*> get_bullet_list() const {return p_bullet_list_;}
+        void HandleBullet(SDL_Renderer* des);
 
     private:
+        vector<Bullet*> p_bullet_list_; // bang dan cua player
+
         float x_val_; // vi tri di chuyen theo phuong x
         float y_val_;
         

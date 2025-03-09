@@ -34,6 +34,7 @@ static SDL_Event g_event;
 #define PLAYER_JUMP_VAL 20
 #define PLAYER_SPEED 10
 #define COMEBACK_TIME 60
+#define DECLINE_BULLET 0.25 // increase to decline bullet
 
 struct Map{
     int start_x_;

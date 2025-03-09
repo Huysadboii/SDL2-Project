@@ -106,6 +106,58 @@ void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen){
         }
 
     }
+
+    else if(events.type == SDL_MOUSEBUTTONDOWN){
+
+        if(events.button.button == SDL_BUTTON_LEFT){
+
+            Bullet* p_bullet = new Bullet();
+
+            if(status_ == WALK_LEFT){
+                p_bullet->LoadImg("img//leftBullet.png", screen);
+                p_bullet->set_bullet_direction(Bullet::DIR_LEFT);
+                p_bullet->SetRect(this->rect_.x, 
+                    this->rect_.y + height_frame_*DECLINE_BULLET);
+            } else {
+                p_bullet->LoadImg("img//rightBullet.png", screen);
+                p_bullet->set_bullet_direction(Bullet::DIR_RIGHT);
+                p_bullet->SetRect(this->rect_.x + width_frame_ - 20, 
+                    this->rect_.y + height_frame_*DECLINE_BULLET);
+            }
+
+            p_bullet->set_x_val(2*PLAYER_SPEED);
+            p_bullet->set_is_move(true);
+            p_bullet_list_.push_back(p_bullet);
+
+        }
+
+    }
+
+}
+
+void Player::HandleBullet(SDL_Renderer* des){
+
+    for(int i=0; i<p_bullet_list_.size(); i++){
+
+        Bullet* p_bullet = p_bullet_list_.at(i);
+
+        if(p_bullet != NULL){
+
+            if(p_bullet->get_is_move()){
+                p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
+                p_bullet->Render(des);
+            } else {
+                p_bullet_list_.erase(p_bullet_list_.begin() + i);
+                if(p_bullet != NULL){
+                    delete p_bullet;
+                    p_bullet = NULL;
+                }
+            }
+
+        }
+
+    }
+
 }
 
 void Player::DoPlayer(Map& map_data){
