@@ -6,7 +6,7 @@ using namespace std;
 #include "constant.h"
 class BaseObject
 {
-    public:
+public:
     BaseObject();
     ~BaseObject();
 
