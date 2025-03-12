@@ -28,11 +28,12 @@ static SDL_Event g_event;
 #define MAX_MAP_Y 10
 #define MAX_TILES 10 // number of block's type
 #define BLANK_TILE 0
+#define COIN_TILE 4
 // properties for player
 #define GRAVITY 0.98
 #define MAX_FALL_SPEED 10
 #define PLAYER_JUMP_VAL 20
-#define PLAYER_SPEED 10
+#define PLAYER_SPEED 10 // also bullet speed
 #define COMEBACK_TIME 60
 #define DECLINE_BULLET 0.25 // increase to decline bullet
 

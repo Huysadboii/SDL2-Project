@@ -18,10 +18,10 @@ Player::Player(){
     map_x_ = 0;
     map_y_ = 0;
     come_back_time_ = 0;
+    coin_count = 0;
 }
 
-Player::~Player(){
-}
+Player::~Player(){}
 
 bool Player::LoadImg(string path, SDL_Renderer* screen){
     bool ret = BaseObject::LoadImg(path, screen);
@@ -241,26 +241,37 @@ void Player::CheckToMap(Map& map_data){
     // check player co nam trong ban do hay khong
     if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y){
 
-        if(x_val_ > 0){ // player moves right
+        if(x_val_ > 0){
             int val1 = map_data.tile[y1][x2];
             int val2 = map_data.tile[y2][x2];
 
-            if(val1 != BLANK_TILE || val2 != BLANK_TILE){
-                x_pos_ = x2*TILE_SIZE; // khong vuot qua bien cua map
-                x_pos_ -= width_frame_ + 1;
-                x_val_ = 0;
-            } 
-
+            if(val1 == COIN_TILE || val2 == COIN_TILE){
+                map_data.tile[y1][x2] = 0;
+                map_data.tile[y2][x2] = 0;
+                IncreaseCoin();
+            } else{
+                if(val1 != BLANK_TILE || val2 != BLANK_TILE){
+                    x_pos_ = x2*TILE_SIZE; // khong vuot qua bien cua map
+                    x_pos_ -= width_frame_ + 1;
+                    x_val_ = 0;
+                }
+            }
+        
         } else if(x_val_ < 0){
             int val1 = map_data.tile[y1][x1];
             int val2 = map_data.tile[y2][x1];
 
-            if(val1 != BLANK_TILE || val2 != BLANK_TILE){
-                x_pos_ = (x1+1)*TILE_SIZE;
-                x_val_ = 0;
-            } 
+            if(val1 == COIN_TILE || val2 == COIN_TILE){
+                map_data.tile[y1][x1] = 0;
+                map_data.tile[y2][x1] = 0;
+                IncreaseCoin();
+            } else{
+                if(val1 != BLANK_TILE || val2 != BLANK_TILE){
+                    x_pos_ = (x1+1)*TILE_SIZE;
+                    x_val_ = 0;
+                }
+            }
         }
-
     }
 
     // check vertical
@@ -272,27 +283,37 @@ void Player::CheckToMap(Map& map_data){
 
     if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y){
 
-        if(y_val_ > 0){ // player moves down
+        if(y_val_ > 0){
             int val1 = map_data.tile[y2][x1];
             int val2 = map_data.tile[y2][x2];
 
-            if(val1 != BLANK_TILE || val2 != BLANK_TILE){
-                y_pos_ = y2*TILE_SIZE;
-                y_pos_ -= height_frame_ + 1;
-                y_val_ = 0;
-                on_ground_ = true;
+            if(val1 == COIN_TILE || val2 == COIN_TILE){
+                map_data.tile[y2][x1] = 0;
+                map_data.tile[y2][x2] = 0;
+                IncreaseCoin();
+            } else{
+                if(val1 != BLANK_TILE || val2 != BLANK_TILE){
+                    y_pos_ = y2*TILE_SIZE;
+                    y_pos_ -= height_frame_ + 1;
+                    y_val_ = 0;
+                    on_ground_ = true;
+                }
             }
-
-        } else if(y_val_ < 0){ // player moves up => decline
+        } else if(y_val_ < 0){
             int val1 = map_data.tile[y1][x1];
             int val2 = map_data.tile[y1][x2];
 
-            if(val1 != BLANK_TILE || val2 != BLANK_TILE){
-                y_pos_ = (y1+1)*TILE_SIZE;
-                y_val_ = 0;
+            if(val1 == COIN_TILE || val2 == COIN_TILE){
+                map_data.tile[y1][x1] = 0;
+                map_data.tile[y1][x2] = 0;
+                IncreaseCoin();
+            } else{
+                if(val1 != BLANK_TILE || val2 != BLANK_TILE){
+                    y_pos_ = (y1+1)*TILE_SIZE;
+                    y_val_ = 0;
+                }
             }
         }
-        
     }
 
     x_pos_ += x_val_;
@@ -307,4 +328,8 @@ void Player::CheckToMap(Map& map_data){
     if(y_pos_ > map_data.max_y_){
         come_back_time_ = COMEBACK_TIME;
     }
+}
+
+void Player::IncreaseCoin(){
+    coin_count++;
 }
