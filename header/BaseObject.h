@@ -4,6 +4,7 @@
 using namespace std;
 
 #include "constant.h"
+
 class BaseObject
 {
 public:

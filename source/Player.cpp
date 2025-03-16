@@ -26,7 +26,7 @@ Player::~Player(){}
 bool Player::LoadImg(string path, SDL_Renderer* screen){
     bool ret = BaseObject::LoadImg(path, screen);
     if(ret){
-        width_frame_ = rect_.w/8;
+        width_frame_ = rect_.w/PLAYER_FRAME;
         height_frame_ = rect_.h;
     }
     return ret;
@@ -34,7 +34,7 @@ bool Player::LoadImg(string path, SDL_Renderer* screen){
 
 void Player::set_clips(){
     if(width_frame_>0 && height_frame_>0){
-        for(int i=0; i<8; i++){
+        for(int i=0; i<PLAYER_FRAME; i++){
             frame_clip_[i].x = i*width_frame_;
             frame_clip_[i].y = 0;
             frame_clip_[i].w = width_frame_;

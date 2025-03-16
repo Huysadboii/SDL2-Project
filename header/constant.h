@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <string>
+#include <vector>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
@@ -27,15 +28,20 @@ static SDL_Event g_event;
 #define MAX_MAP_X 400
 #define MAX_MAP_Y 10
 #define MAX_TILES 10 // number of block's type
+#define ENEMY_OBJECT 20 // number of enemy
 #define BLANK_TILE 0
 #define COIN_TILE 4
 // properties for player
-#define GRAVITY 0.98
-#define MAX_FALL_SPEED 10
+#define GRAVITY 1
+#define PLAYER_SPEED 11 // also bullet speed
 #define PLAYER_JUMP_VAL 20
-#define PLAYER_SPEED 10 // also bullet speed
+
+#define MAX_FALL_SPEED 10
 #define COMEBACK_TIME 60
 #define DECLINE_BULLET 0.25 // increase to decline bullet
+// enemy
+#define PLAYER_FRAME 8
+#define ENEMY_FRAME 8
 
 struct Map{
     int start_x_;

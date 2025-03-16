@@ -2,6 +2,7 @@
 #include "header/BaseObject.h"
 #include "header/GameMap.h"
 #include "header/Player.h"
+#include "header/Enemy.h"
 using namespace std;
 BaseObject g_background;
 
@@ -47,7 +48,7 @@ bool InitData(){
     return success;
 }
 bool loadBackground(){
-    bool ret = g_background.LoadImg("img//background.png", g_screen);
+    bool ret = g_background.LoadImg("img//background3.png", g_screen);
     return ret;
 }
 void close(){
@@ -62,7 +63,21 @@ void close(){
     IMG_Quit();
     SDL_Quit();
 }
-
+vector<Enemy*> MakeEnemyList(){
+    vector<Enemy*> list_enemies;
+    Enemy* enemy_objects = new Enemy[ENEMY_OBJECT];
+    for(int i = 0; i < ENEMY_OBJECT; i++){
+        Enemy* p_enemy = (enemy_objects + i);
+        if(p_enemy != NULL){
+            p_enemy->LoadImg("img//threat_level.png", g_screen);
+            p_enemy->set_clips();
+            p_enemy->set_x_pos(700 + i*1200);
+            p_enemy->set_y_pos(250);
+            list_enemies.push_back(p_enemy);
+        }
+    }
+    return list_enemies;
+}
 
 int main(int argc, char* argv[])
 {
@@ -78,6 +93,8 @@ int main(int argc, char* argv[])
     Player player;
     player.LoadImg("img//player_right.png", g_screen);
     player.set_clips(); // hieu ung chuyen dong
+
+    vector<Enemy*> enemies = MakeEnemyList();
 
     bool is_quit = false;
     while(!is_quit){
@@ -110,6 +127,14 @@ int main(int argc, char* argv[])
 
         game_map.SetMap(map_data);
         game_map.DrawMap(g_screen);
+        for(int i = 0; i < enemies.size(); i++){
+            Enemy* enemy = enemies.at(i);
+            if(enemy != NULL){
+                enemy->SetMapXY(map_data.start_x_, map_data.start_y_);
+                enemy->DoEnemy(map_data);
+                enemy->Show(g_screen);
+            }
+        }
         
         SDL_RenderPresent(g_screen);
         Uint32 frameTime = SDL_GetTicks() - frameStart;

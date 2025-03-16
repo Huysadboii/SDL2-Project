@@ -2,7 +2,6 @@
 #define PLAYER_H_
 using namespace std;
 
-#include <vector>
 #include "constant.h"
 #include "BaseObject.h"
 #include "Bullet.h"
