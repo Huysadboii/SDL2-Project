@@ -65,17 +65,36 @@ void close(){
 }
 vector<Enemy*> MakeEnemyList(){
     vector<Enemy*> list_enemies;
+
+    Enemy* dynamic_enemy = new Enemy[ENEMY_OBJECT];
+    for(int i=0; i<ENEMY_OBJECT; i++){
+        Enemy* p_enemy = dynamic_enemy + i;
+        if(p_enemy != NULL){
+            p_enemy->LoadImg("img//threat_left.png", g_screen);
+            p_enemy->set_clips();
+            p_enemy->set_type_move(Enemy::MOVE_IN_SPACE);
+            p_enemy->set_x_pos(700 + i*1200);
+            p_enemy->set_y_pos(200);
+            int pos1 = p_enemy->get_x_pos() - 60;
+            int pos2 = p_enemy->get_x_pos() + 60;
+            p_enemy->set_animation_pos(pos1, pos2);
+            p_enemy->set_input_left(1);
+            list_enemies.push_back(p_enemy);
+        }
+    }
+
     Enemy* enemy_objects = new Enemy[ENEMY_OBJECT];
     for(int i = 0; i < ENEMY_OBJECT; i++){
         Enemy* p_enemy = (enemy_objects + i);
         if(p_enemy != NULL){
             p_enemy->LoadImg("img//threat_level.png", g_screen);
             p_enemy->set_clips();
-            p_enemy->set_x_pos(700 + i*1200);
+            p_enemy->set_x_pos(500 + i*500);
             p_enemy->set_y_pos(250);
             list_enemies.push_back(p_enemy);
         }
     }
+
     return list_enemies;
 }
 
@@ -100,12 +119,11 @@ int main(int argc, char* argv[])
     while(!is_quit){
 
         Uint32 frameStart = SDL_GetTicks();
-        while(SDL_PollEvent(&g_event) != 0){
 
+        while(SDL_PollEvent(&g_event) != 0){
             if(g_event.type == SDL_QUIT){
                 is_quit = true;
             }
-
             player.Handle_Input_Action(g_event, g_screen);
         }
 
@@ -115,11 +133,12 @@ int main(int argc, char* argv[])
             RENDER_DRAW_COLOR,
             RENDER_DRAW_COLOR, 
             RENDER_DRAW_COLOR
-        ); SDL_RenderClear(g_screen);
-        
+        ); 
+        SDL_RenderClear(g_screen);
         g_background.Render(g_screen, NULL);
+        
         Map map_data = game_map.getMap();
-
+        
         player.HandleBullet(g_screen);
         player.SetMapXY(map_data.start_x_, map_data.start_y_);
         player.DoPlayer(map_data);
@@ -127,10 +146,12 @@ int main(int argc, char* argv[])
 
         game_map.SetMap(map_data);
         game_map.DrawMap(g_screen);
+
         for(int i = 0; i < enemies.size(); i++){
             Enemy* enemy = enemies.at(i);
             if(enemy != NULL){
                 enemy->SetMapXY(map_data.start_x_, map_data.start_y_);
+                enemy->ImpMoveType(g_screen);
                 enemy->DoEnemy(map_data);
                 enemy->Show(g_screen);
             }

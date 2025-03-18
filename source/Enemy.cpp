@@ -6,6 +6,10 @@ Enemy::Enemy(){
     width_frame_ = 0; height_frame_ = 0; frame_ = 0;
     on_ground_ = false;
     come_back_time_ = 0;
+
+    animation_a_ = 0; animation_b_ = 0;
+    input_type_.left_ = 0;
+    type_move_ = STATIC;
 }
 
 Enemy::~Enemy(){}
@@ -51,24 +55,30 @@ void Enemy::DoEnemy(Map& g_map){
         if(y_val_ >= MAX_FALL_SPEED){
             y_val_ = MAX_FALL_SPEED;
         }
+        
+        if(input_type_.left_ == 1){
+            x_val_ -= ENEMY_SPEED;
+        } else if(input_type_.right_ == 1){
+            x_val_ += ENEMY_SPEED;
+        }
         CheckToMap(g_map);
     }
 
     else if(come_back_time_ > 0){
         come_back_time_--;
         if(come_back_time_ == 0){
-
-            on_ground_ = false;
             x_val_ = 0;
             y_val_ = 0;
 
             if(x_pos_ > 256){
                 x_pos_ -= 256;
+                animation_a_ -= 256;
+                animation_b_ -= 256;
             } else{
-                x_pos_ == 0;
+                x_pos_ = 0;
             }
             y_pos_ = 0;
-            
+            input_type_.left_ = 1;
         }
     }
 }
@@ -154,5 +164,28 @@ void Enemy::CheckToMap(Map& map_data){
 
     if(y_pos_ > map_data.max_y_){
         come_back_time_ = COMEBACK_TIME;
+    }
+}
+
+void Enemy::ImpMoveType(SDL_Renderer* screen){
+    if(type_move_ == STATIC) {;}
+    else{
+
+        if(on_ground_ == true){
+            if(x_pos_ > animation_b_){
+                input_type_.left_ = 1;
+                input_type_.right_ = 0;
+                LoadImg("img//threat_left.png", screen);
+            } else if(x_pos_ < animation_a_){
+                input_type_.left_ = 0;
+                input_type_.right_ = 1;
+                LoadImg("img//threat_right.png", screen);
+            }
+
+        } else{
+            if(input_type_.left_ == 1){
+                LoadImg("img//threat_left.png", screen);
+            } 
+        }
     }
 }

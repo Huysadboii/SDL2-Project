@@ -42,6 +42,7 @@ static SDL_Event g_event;
 // enemy
 #define PLAYER_FRAME 8
 #define ENEMY_FRAME 8
+#define ENEMY_SPEED 5
 
 struct Map{
     int start_x_;
