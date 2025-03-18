@@ -14,6 +14,11 @@ class Bullet : public BaseObject{
             DIR_RIGHT = 20, // khong dat enum trung nhau
             DIR_LEFT = 21,
         };
+        enum BulletType{
+            NORMAL_BULLET = 50,
+            ENEMY_BULLET = 51,
+            ENEMY2_BULLET = 52,
+        };
 
         void set_x_val(const int& xVal){x_val_ = xVal;}
         void set_y_val(const int& yVal){y_val_ = yVal;}
@@ -26,12 +31,15 @@ class Bullet : public BaseObject{
         void HandleMove(const int& x_border, const int& y_border);
         void set_bullet_direction(const int& val){bullet_direction_ = val;}
         int get_bullet_direction() const {return bullet_direction_;}
+        void LoadImgBullet(SDL_Renderer* des);
+        void set_bullet_type(const int& type){bullet_type_ = type;}
 
     private:
         int x_val_; // doi tuong di chuyen luon co bien nay
         int y_val_;
         bool is_move_;
         int bullet_direction_;
+        int bullet_type_;
 
 };
 

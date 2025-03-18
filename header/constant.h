@@ -28,12 +28,11 @@ static SDL_Event g_event;
 #define MAX_MAP_X 400
 #define MAX_MAP_Y 10
 #define MAX_TILES 10 // number of block's type
-#define ENEMY_OBJECT 20 // number of enemy
 #define BLANK_TILE 0
 #define COIN_TILE 4
 // properties for player
 #define GRAVITY 1
-#define PLAYER_SPEED 11 // also bullet speed
+#define PLAYER_SPEED 12 // also bullet speed
 #define PLAYER_JUMP_VAL 20
 
 #define MAX_FALL_SPEED 10
@@ -43,6 +42,8 @@ static SDL_Event g_event;
 #define PLAYER_FRAME 8
 #define ENEMY_FRAME 8
 #define ENEMY_SPEED 5
+#define ENEMY_OBJECT 20 // number of enemy
+#define MAX_BULLET_DIS 400
 
 struct Map{
     int start_x_;

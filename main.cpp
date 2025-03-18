@@ -79,18 +79,24 @@ vector<Enemy*> MakeEnemyList(){
             int pos2 = p_enemy->get_x_pos() + 60;
             p_enemy->set_animation_pos(pos1, pos2);
             p_enemy->set_input_left(1);
+            Bullet* p_bullet = new Bullet();
+            p_enemy->InitBullet(p_bullet, g_screen, 2);
             list_enemies.push_back(p_enemy);
         }
     }
 
     Enemy* enemy_objects = new Enemy[ENEMY_OBJECT];
     for(int i = 0; i < ENEMY_OBJECT; i++){
-        Enemy* p_enemy = (enemy_objects + i);
+        Enemy* p_enemy = enemy_objects + i;
         if(p_enemy != NULL){
             p_enemy->LoadImg("img//threat_level.png", g_screen);
             p_enemy->set_clips();
-            p_enemy->set_x_pos(500 + i*500);
+            p_enemy->set_x_pos(1000 + i*500);
             p_enemy->set_y_pos(250);
+            p_enemy->set_type_move(Enemy::STATIC);
+            p_enemy->set_input_left(0);
+            Bullet* p_bullet = new Bullet();
+            p_enemy->InitBullet(p_bullet, g_screen, 1);
             list_enemies.push_back(p_enemy);
         }
     }
@@ -153,6 +159,7 @@ int main(int argc, char* argv[])
                 enemy->SetMapXY(map_data.start_x_, map_data.start_y_);
                 enemy->ImpMoveType(g_screen);
                 enemy->DoEnemy(map_data);
+                enemy->MakeBullet(g_screen, SCREEN_WIDTH, SCREEN_HEIGHT);
                 enemy->Show(g_screen);
             }
         }
@@ -165,6 +172,11 @@ int main(int argc, char* argv[])
 
     }
 
+    for(int i=0; i<enemies.size(); i++){
+        Enemy* enemy = enemies.at(i);
+        delete enemy;
+    }
+    enemies.clear();
     close();
     return 0;
 }

@@ -1,5 +1,5 @@
 #include "../header/Enemy.h"
-
+// xem lai
 Enemy::Enemy(){
     x_val_ = 0; y_val_ = 0;
     x_pos_ = 0; y_pos_ = 0;
@@ -179,7 +179,7 @@ void Enemy::ImpMoveType(SDL_Renderer* screen){
             } else if(x_pos_ < animation_a_){
                 input_type_.left_ = 0;
                 input_type_.right_ = 1;
-                LoadImg("img//threat_right.png", screen);
+                LoadImg("img//threat_left.png", screen);
             }
 
         } else{
@@ -187,5 +187,46 @@ void Enemy::ImpMoveType(SDL_Renderer* screen){
                 LoadImg("img//threat_left.png", screen);
             } 
         }
+    }
+}
+// xem lai
+void Enemy::InitBullet(Bullet* p_bullet, SDL_Renderer* screen, int enemy_type){
+    if(p_bullet != NULL){
+        if(enemy_type == 1){
+            p_bullet->set_bullet_type(Bullet::ENEMY_BULLET);
+        } else if(enemy_type == 2){
+            p_bullet->set_bullet_type(Bullet::ENEMY2_BULLET);
+        }
+        p_bullet->LoadImgBullet(screen);
+        p_bullet->set_is_move(true);
+        p_bullet->set_bullet_direction(Bullet::DIR_LEFT);
+        p_bullet->SetRect(rect_.x + 5, rect_.y + 10);
+        p_bullet->set_x_val(15);
+        bullet_list_.push_back(p_bullet);
+    }
+}
+
+void Enemy::MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit){
+    for(int i = 0; i < bullet_list_.size(); i++){
+
+        Bullet* p_bullet = bullet_list_.at(i);
+        if(p_bullet != NULL){
+
+            if(p_bullet->get_is_move()){
+                int bullet_distance = rect_.x + width_frame_ - p_bullet->GetRect().x;
+                if(bullet_distance < MAX_BULLET_DIS && bullet_distance > 0){
+                    p_bullet->HandleMove(x_limit, y_limit);
+                    p_bullet->Render(screen);
+                } else {
+                    p_bullet->set_is_move(false);
+                }
+
+            } else{
+                p_bullet->set_is_move(true);
+                p_bullet->SetRect(rect_.x + 5, rect_.y + 10);
+            }
+            
+        }
+
     }
 }

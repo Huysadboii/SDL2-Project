@@ -19,7 +19,8 @@ public:
     void Free();
 
     SDL_Texture* p_object_;
-    SDL_Rect rect_; // size
+    SDL_Rect rect_; // position of object
+    // pos is the position on the whole map
 };
 
 #endif
