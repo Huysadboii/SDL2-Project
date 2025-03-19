@@ -30,6 +30,7 @@ static SDL_Event g_event;
 #define MAX_TILES 10 // number of block's type
 #define BLANK_TILE 0
 #define COIN_TILE 4
+#define EXPLOSION_FRAME 8
 // properties for player
 #define GRAVITY 1
 #define PLAYER_SPEED 12 // also bullet speed

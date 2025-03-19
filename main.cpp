@@ -3,6 +3,7 @@
 #include "header/GameMap.h"
 #include "header/Player.h"
 #include "header/Enemy.h"
+#include "header/Explosion.h"
 using namespace std;
 BaseObject g_background;
 
@@ -119,6 +120,11 @@ int main(int argc, char* argv[])
 
     vector<Enemy*> enemies = MakeEnemyList();
 
+    Explosion exp_enemy;
+    bool eRet = exp_enemy.LoadImg("img//explode.png", g_screen);
+    if(!eRet){ return -1; }
+    exp_enemy.set_clip();
+
     bool is_quit = false;
     while(!is_quit){
         Uint32 frameStart = SDL_GetTicks();
@@ -174,7 +180,7 @@ int main(int argc, char* argv[])
                 SDL_Rect rect_threat = p_threat->GetRectFrame();
                 bool bCol2 = SDLconstant::CheckCollision(rect_player, rect_threat);
                 if(bCol2 || bCol1){
-                    if(MessageBox(NULL, "GAME OVER", "Info", MB_OK | MB_ICONSTOP) == IDOK){
+                    if(MessageBox(NULL, "GAME OVER", "Oops", MB_OK | MB_ICONSTOP) == IDOK){
                         p_threat->Free();
                         close();
                         SDL_Quit();
@@ -184,6 +190,8 @@ int main(int argc, char* argv[])
             }
         }
 
+        int frame_exp_width = exp_enemy.get_frame_width();
+        int frame_exp_height = exp_enemy.get_frame_height();
         vector<Bullet*> bullet_arr = p_player.get_bullet_list();
         for(int i = 0; i < bullet_arr.size(); i++){
             Bullet* p_bullet = bullet_arr.at(i);
@@ -202,6 +210,16 @@ int main(int argc, char* argv[])
                         SDL_Rect bRect = p_bullet->GetRect();
                         bool bCol = SDLconstant::CheckCollision(bRect, eRect);
                         if(bCol){
+
+                            for(int i=0; i<EXPLOSION_FRAME; i++){
+                                // ban dau vi tri o mep => tru di 1 nua frame
+                                int x_pos = p_bullet->GetRect().x - frame_exp_width*0.5;
+                                int y_pos = p_bullet->GetRect().y - frame_exp_height*0.5;
+                                exp_enemy.set_frame(i);
+                                exp_enemy.SetRect(x_pos, y_pos);
+                                exp_enemy.Show(g_screen);
+                            }
+
                             p_player.RemoveBullet(i);
                             enemy->Free();
                             enemies.erase(enemies.begin() + j);
