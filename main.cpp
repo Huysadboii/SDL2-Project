@@ -95,8 +95,6 @@ vector<Enemy*> MakeEnemyList(){
             p_enemy->set_y_pos(250);
             p_enemy->set_type_move(Enemy::STATIC);
             p_enemy->set_input_left(0);
-            Bullet* p_bullet = new Bullet();
-            p_enemy->InitBullet(p_bullet, g_screen, 1);
             list_enemies.push_back(p_enemy);
         }
     }
@@ -110,27 +108,25 @@ int main(int argc, char* argv[])
     if(InitData() == false){ return -1; }
     if(loadBackground() == false){ return -1; }
 
-    GameMap game_map; // create game map object
+    GameMap game_map;
     string mapStructure = "map/map01.dat";
     game_map.LoadMap((char*)mapStructure.c_str());
     game_map.LoadTiles(g_screen);
 
-    Player player;
-    player.LoadImg("img//player_right.png", g_screen);
-    player.set_clips(); // hieu ung chuyen dong
+    Player p_player;
+    p_player.LoadImg("img//player_right.png", g_screen);
+    p_player.set_clips(); // hieu ung chuyen dong
 
     vector<Enemy*> enemies = MakeEnemyList();
 
     bool is_quit = false;
     while(!is_quit){
-
         Uint32 frameStart = SDL_GetTicks();
-
         while(SDL_PollEvent(&g_event) != 0){
             if(g_event.type == SDL_QUIT){
                 is_quit = true;
             }
-            player.Handle_Input_Action(g_event, g_screen);
+            p_player.Handle_Input_Action(g_event, g_screen);
         }
 
         SDL_SetRenderDrawColor(
@@ -142,36 +138,60 @@ int main(int argc, char* argv[])
         ); 
         SDL_RenderClear(g_screen);
         g_background.Render(g_screen, NULL);
-        
         Map map_data = game_map.getMap();
         
-        player.HandleBullet(g_screen);
-        player.SetMapXY(map_data.start_x_, map_data.start_y_);
-        player.DoPlayer(map_data);
-        player.Show(g_screen);
+        p_player.HandleBullet(g_screen);
+        p_player.SetMapXY(map_data.start_x_, map_data.start_y_);
+        p_player.DoPlayer(map_data);
+        p_player.Show(g_screen);
 
         game_map.SetMap(map_data);
         game_map.DrawMap(g_screen);
 
         for(int i = 0; i < enemies.size(); i++){
-            Enemy* enemy = enemies.at(i);
-            if(enemy != NULL){
-                enemy->SetMapXY(map_data.start_x_, map_data.start_y_);
-                enemy->ImpMoveType(g_screen);
-                enemy->DoEnemy(map_data);
-                enemy->MakeBullet(g_screen, SCREEN_WIDTH, SCREEN_HEIGHT);
-                enemy->Show(g_screen);
+            Enemy* p_threat = enemies.at(i);
+            if(p_threat != NULL){
+                p_threat->SetMapXY(map_data.start_x_, map_data.start_y_);
+                p_threat->ImpMoveType(g_screen);
+                p_threat->DoEnemy(map_data);
+                p_threat->MakeBullet(g_screen, SCREEN_WIDTH, SCREEN_HEIGHT);
+                p_threat->Show(g_screen);
+
+                SDL_Rect rect_player = p_player.GetRectFrame();
+                bool bCol1 = false;
+                vector<Bullet*> tBullet_list = p_threat->get_bullet_list();
+                for(int j=0; j<tBullet_list.size(); j++){
+                    Bullet* pt_bullet = tBullet_list.at(j);
+                    if(pt_bullet){
+                        bCol1 = SDLconstant::CheckCollision(pt_bullet->GetRect(), rect_player);
+                        if(bCol1){
+                            p_threat->RemoveBullet(j);
+                            break;
+                        }
+                    }
+                }
+
+                SDL_Rect rect_threat = p_threat->GetRectFrame();
+                bool bCol2 = SDLconstant::CheckCollision(rect_player, rect_threat);
+                if(bCol2 || bCol1){
+                    if(MessageBox(NULL, "GAME OVER", "Info", MB_OK | MB_ICONSTOP) == IDOK){
+                        p_threat->Free();
+                        close();
+                        SDL_Quit();
+                        return 0;
+                    }
+                }
             }
         }
 
-        vector<Bullet*> bullet_arr = player.get_bullet_list();
+        vector<Bullet*> bullet_arr = p_player.get_bullet_list();
         for(int i = 0; i < bullet_arr.size(); i++){
             Bullet* p_bullet = bullet_arr.at(i);
 
             if(p_bullet != NULL){
                 for(int j=0; j<enemies.size(); j++){
                     Enemy* enemy = enemies.at(j);
-                    
+
                     if(enemy != NULL){
                         SDL_Rect eRect;
                         eRect.x = enemy->GetRect().x;
@@ -182,7 +202,7 @@ int main(int argc, char* argv[])
                         SDL_Rect bRect = p_bullet->GetRect();
                         bool bCol = SDLconstant::CheckCollision(bRect, eRect);
                         if(bCol){
-                            player.RemoveBullet(i);
+                            p_player.RemoveBullet(i);
                             enemy->Free();
                             enemies.erase(enemies.begin() + j);
                         }
@@ -196,14 +216,13 @@ int main(int argc, char* argv[])
         if(frameDelay > frameTime){
             SDL_Delay(frameDelay - frameTime);
         }
-
     }
 
     for(int i=0; i<enemies.size(); i++){
         Enemy* enemy = enemies.at(i);
-        delete enemy;
+        enemy->Free();
+        enemies.erase(enemies.begin() + i);
     }
-    enemies.clear();
     close();
     return 0;
 }

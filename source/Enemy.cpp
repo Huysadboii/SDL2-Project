@@ -23,6 +23,15 @@ bool Enemy::LoadImg(string path, SDL_Renderer* screen){
     return ret;
 }
 
+SDL_Rect Enemy::GetRectFrame(){
+    SDL_Rect rect;
+    rect.x = rect_.x;
+    rect.y = rect_.y;
+    rect.w = width_frame_;
+    rect.h = height_frame_;
+    return rect;
+}
+
 void Enemy::set_clips(){
     if(width_frame_ > 0 && height_frame_ > 0){
         for(int i = 0; i < ENEMY_FRAME; i++){
@@ -79,6 +88,18 @@ void Enemy::DoEnemy(Map& g_map){
             }
             y_pos_ = 0;
             input_type_.left_ = 1;
+        }
+    }
+}
+
+void Enemy::RemoveBullet(const int& idx){
+    int size = bullet_list_.size();
+    if(size > 0 && idx < size){
+        Bullet* p_bullet = bullet_list_.at(idx);
+        bullet_list_.erase(bullet_list_.begin() + idx);
+        if(p_bullet){
+            delete p_bullet;
+            p_bullet = NULL;
         }
     }
 }

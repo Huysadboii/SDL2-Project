@@ -22,6 +22,7 @@ class Enemy : public BaseObject{
         void Show(SDL_Renderer* des);
         int get_width_frame() const { return width_frame_; }
         int get_height_frame() const { return height_frame_; }
+        SDL_Rect GetRectFrame();
         void DoEnemy(Map& g_map);
         void CheckToMap(Map& g_map);
 
@@ -40,6 +41,7 @@ class Enemy : public BaseObject{
         void set_bullet_list(const vector<Bullet*>& bullet_list){ bullet_list_ = bullet_list; }
         void InitBullet(Bullet* p_bullet, SDL_Renderer* screen, int enemy_type);
         void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit);
+        void RemoveBullet(const int& idx);
 
     private:
         int frame_;
