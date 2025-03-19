@@ -160,6 +160,18 @@ void Player::HandleBullet(SDL_Renderer* des){
 
 }
 
+void Player::RemoveBullet(const int& idx){
+    int size = p_bullet_list_.size();
+    if(size > 0 && idx < size){
+        Bullet* p_bullet = p_bullet_list_.at(idx);
+        p_bullet_list_.erase(p_bullet_list_.begin() + idx);
+        if(p_bullet){
+            delete p_bullet;
+            p_bullet = NULL;
+        }
+    }
+}
+
 void Player::DoPlayer(Map& map_data){
 
     if(come_back_time_ == 0){

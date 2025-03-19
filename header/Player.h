@@ -31,6 +31,7 @@ class Player : public BaseObject{
         void set_bullet_list(vector<Bullet*> bullet_list){p_bullet_list_ = bullet_list;}
         vector<Bullet*> get_bullet_list() const {return p_bullet_list_;}
         void HandleBullet(SDL_Renderer* des);
+        void RemoveBullet(const int& idx);
         void IncreaseCoin();
 
     private:

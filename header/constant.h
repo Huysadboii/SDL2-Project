@@ -64,4 +64,9 @@ struct Input{
     int jump_;
 };
 
+namespace SDLconstant{
+    bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
+}
+
+
 #endif

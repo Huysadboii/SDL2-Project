@@ -163,6 +163,33 @@ int main(int argc, char* argv[])
                 enemy->Show(g_screen);
             }
         }
+
+        vector<Bullet*> bullet_arr = player.get_bullet_list();
+        for(int i = 0; i < bullet_arr.size(); i++){
+            Bullet* p_bullet = bullet_arr.at(i);
+
+            if(p_bullet != NULL){
+                for(int j=0; j<enemies.size(); j++){
+                    Enemy* enemy = enemies.at(j);
+                    
+                    if(enemy != NULL){
+                        SDL_Rect eRect;
+                        eRect.x = enemy->GetRect().x;
+                        eRect.y = enemy->GetRect().y;
+                        eRect.w = enemy->get_width_frame();
+                        eRect.h = enemy->get_height_frame();
+
+                        SDL_Rect bRect = p_bullet->GetRect();
+                        bool bCol = SDLconstant::CheckCollision(bRect, eRect);
+                        if(bCol){
+                            player.RemoveBullet(i);
+                            enemy->Free();
+                            enemies.erase(enemies.begin() + j);
+                        }
+                    }
+                }
+            }
+        }
         
         SDL_RenderPresent(g_screen);
         Uint32 frameTime = SDL_GetTicks() - frameStart;
