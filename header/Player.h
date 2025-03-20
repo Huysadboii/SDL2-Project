@@ -21,6 +21,8 @@ class Player : public BaseObject{
         void Handle_Input_Action(SDL_Event events, SDL_Renderer* screen);
         void set_clips();
         SDL_Rect GetRectFrame();
+        int get_width_frame() const {return width_frame_;}
+        int get_height_frame() const {return height_frame_;}
         
         void DoPlayer(Map& map_data);
         void CheckToMap(Map& map_data);
@@ -32,6 +34,8 @@ class Player : public BaseObject{
         void HandleBullet(SDL_Renderer* des);
         void RemoveBullet(const int& idx);
         void IncreaseCoin();
+
+        void set_comeback_time(const int& cb_time){come_back_time_ = cb_time;}
 
     private:
         vector<Bullet*> p_bullet_list_; // bang dan cua player

@@ -35,10 +35,11 @@ static SDL_Event g_event;
 #define GRAVITY 1
 #define PLAYER_SPEED 12 // also bullet speed
 #define PLAYER_JUMP_VAL 20
-
 #define MAX_FALL_SPEED 10
 #define COMEBACK_TIME 60
 #define DECLINE_BULLET 0.25 // increase to decline bullet
+#define RESURRECT 1000
+#define LIFE 2
 // enemy
 #define PLAYER_FRAME 8
 #define ENEMY_FRAME 8
