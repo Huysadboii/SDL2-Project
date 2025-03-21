@@ -19,12 +19,14 @@ static SDL_Event g_event;
 #define SCREEN_HEIGHT 640
 #define SCREEN_BPP 32
 #define TEXT_FONT 20
+
 // color code to neutralize character
 #define COLOR_KEY_R 167
 #define COLOR_KEY_G 175
 #define COLOR_KEY_B 180
 #define RENDER_DRAW_COLOR 255
 #define FPS 60
+
 //map properties
 #define TILE_SIZE 64
 #define MAX_MAP_X 400
@@ -34,6 +36,7 @@ static SDL_Event g_event;
 #define COIN_TILE 4
 #define EXPLOSION_FRAME 8
 #define TIME_TOTAL 300
+
 // properties for player
 #define GRAVITY 1
 #define PLAYER_SPEED 14 // also bullet speed
@@ -43,6 +46,7 @@ static SDL_Event g_event;
 #define DECLINE_BULLET 0.25 // increase to decline bullet
 #define RESURRECT 500
 #define LIFE 3
+
 // enemy
 #define PLAYER_FRAME 8
 #define ENEMY_FRAME 8
@@ -68,10 +72,5 @@ struct Input{
     int down_;
     int jump_;
 };
-
-namespace SDLconstant{
-    bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2);
-}
-
 
 #endif

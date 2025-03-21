@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
                 for(int j=0; j<tBullet_list.size(); j++){
                     Bullet* pt_bullet = tBullet_list.at(j);
                     if(pt_bullet){
-                        bCol1 = SDLconstant::CheckCollision(pt_bullet->GetRect(), rect_player);
+                        bCol1 = Collision::CheckCollision(pt_bullet->GetRect(), rect_player);
                         if(bCol1){
                             p_threat->RemoveBullet(j);
                             Bullet* p_bullet = new Bullet();
@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
                 }
 
                 SDL_Rect rect_threat = p_threat->GetRectFrame();
-                bool bCol2 = SDLconstant::CheckCollision(rect_player, rect_threat);
+                bool bCol2 = Collision::CheckCollision(rect_player, rect_threat);
                 if(bCol2 || bCol1){
                     int width_exp_main = exp_main.get_frame_width();
                     int height_exp_main = exp_main.get_frame_height();
@@ -229,7 +229,7 @@ int main(int argc, char* argv[])
                         eRect.h = enemy->get_height_frame();
 
                         SDL_Rect bRect = p_bullet->GetRect();
-                        bool bCol = SDLconstant::CheckCollision(bRect, eRect);
+                        bool bCol = Collision::CheckCollision(bRect, eRect);
                         if(bCol){
 
                             for(int i=0; i<EXPLOSION_FRAME; i++){
