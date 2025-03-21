@@ -24,7 +24,7 @@ Player::Player(){
 Player::~Player(){}
 
 bool Player::LoadImg(string path, SDL_Renderer* screen){
-    bool ret = BaseObject::LoadImg(path, screen);
+    bool ret = Object::LoadImg(path, screen);
     if(ret){
         width_frame_ = rect_.w/PLAYER_FRAME;
         height_frame_ = rect_.h;

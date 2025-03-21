@@ -1,15 +1,14 @@
 // kiem tra private
-#ifndef BASE_OBJECT_H_
-#define BASE_OBJECT_H_
-using namespace std;
+#ifndef OBJECT_H_
+#define OBJECT_H_
 
 #include "constant.h"
 
-class BaseObject
+class Object
 {
 public:
-    BaseObject();
-    ~BaseObject();
+    Object();
+    ~Object();
 
     void SetRect(const int& x, const int& y){ rect_.x = x; rect_.y = y; };
     SDL_Rect GetRect() { return rect_; }

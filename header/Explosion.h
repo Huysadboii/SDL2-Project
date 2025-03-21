@@ -2,9 +2,9 @@
 #define EXPLOSION_H
 
 #include "constant.h"
-#include "BaseObject.h"
+#include "Object.h"
 
-class Explosion : public BaseObject
+class Explosion : public Object
 {
     public:
         Explosion();

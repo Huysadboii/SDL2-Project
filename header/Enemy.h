@@ -1,11 +1,11 @@
 #ifndef ENEMY_H_
 #define ENEMY_H_
 
-#include "BaseObject.h"
+#include "Object.h"
 #include "constant.h"
 #include "Bullet.h"
 
-class Enemy : public BaseObject{
+class Enemy : public Object{
     public:
         Enemy();
         ~Enemy();

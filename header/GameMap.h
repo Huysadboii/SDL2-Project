@@ -2,10 +2,10 @@
 #define GAME_MAP_H
 
 #include "constant.h"
-#include "BaseObject.h"
+#include "Object.h"
 
-// map cung la vat the nen ke thua BaseObject
-class TiteMat : public BaseObject{
+// map cung la vat the nen ke thua Object
+class TiteMat : public Object{
 public:
     TiteMat(){;}
     ~TiteMat(){;}

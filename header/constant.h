@@ -1,5 +1,6 @@
 #ifndef CONSTANT_H_
 #define CONSTANT_H_
+using namespace std;
 
 #include <windows.h>
 #include <string>
@@ -17,6 +18,7 @@ static SDL_Event g_event;
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 640
 #define SCREEN_BPP 32
+#define TEXT_FONT 20
 // color code to neutralize character
 #define COLOR_KEY_R 167
 #define COLOR_KEY_G 175
@@ -31,18 +33,20 @@ static SDL_Event g_event;
 #define BLANK_TILE 0
 #define COIN_TILE 4
 #define EXPLOSION_FRAME 8
+#define TIME_TOTAL 300
 // properties for player
 #define GRAVITY 1
-#define PLAYER_SPEED 12 // also bullet speed
+#define PLAYER_SPEED 14 // also bullet speed
 #define PLAYER_JUMP_VAL 20
-
 #define MAX_FALL_SPEED 10
-#define COMEBACK_TIME 60
+#define COMEBACK_TIME 100
 #define DECLINE_BULLET 0.25 // increase to decline bullet
+#define RESURRECT 500
+#define LIFE 3
 // enemy
 #define PLAYER_FRAME 8
 #define ENEMY_FRAME 8
-#define ENEMY_SPEED 5
+#define ENEMY_SPEED 3
 #define ENEMY_OBJECT 20 // number of enemy
 #define MAX_BULLET_DIS 400
 

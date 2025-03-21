@@ -11,7 +11,7 @@ Explosion::~Explosion(){}
 
 bool Explosion::LoadImg(string path, SDL_Renderer* screen)
 {
-    bool ret = BaseObject::LoadImg(path, screen);
+    bool ret = Object::LoadImg(path, screen);
     if(ret == true)
     {
         frame_width = rect_.w/EXPLOSION_FRAME;

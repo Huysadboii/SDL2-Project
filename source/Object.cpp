@@ -1,6 +1,6 @@
-#include "../header/BaseObject.h"
+#include "../header/Object.h"
 
-BaseObject::BaseObject(){
+Object::Object(){
     p_object_ = NULL;
     rect_.x = 0;
     rect_.y = 0;
@@ -8,11 +8,11 @@ BaseObject::BaseObject(){
     rect_.h = 0;
 }
 
-BaseObject::~BaseObject(){
+Object::~Object(){
     Free();
 }
 
-bool BaseObject::LoadImg(string path, SDL_Renderer* screen){
+bool Object::LoadImg(string path, SDL_Renderer* screen){
     Free();
     SDL_Texture* new_texture = NULL;
 
@@ -36,14 +36,14 @@ bool BaseObject::LoadImg(string path, SDL_Renderer* screen){
     return p_object_ != NULL;
 }
 
-void BaseObject::Render(SDL_Renderer* des, const SDL_Rect* clip) {
+void Object::Render(SDL_Renderer* des, const SDL_Rect* clip) {
     // position, size of the image
     SDL_Rect renderquad = { rect_.x, rect_.y, rect_.w, rect_.h }; 
     // Push the player's parameters to the destination with the renderquad data
     SDL_RenderCopy(des, p_object_, clip, &renderquad); 
 }
 
-void BaseObject::Free(){
+void Object::Free(){
     if(p_object_ != NULL){
         SDL_DestroyTexture(p_object_);
         p_object_ = NULL;
