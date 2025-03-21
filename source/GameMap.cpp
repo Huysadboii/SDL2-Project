@@ -7,7 +7,7 @@ void GameMap::LoadMap(char* name){
     FILE* fp = NULL;
     fopen_s(&fp, name, "rb");
     if(fp == NULL){
-        return; // khong mo duoc file
+        return;
     }
     
     game_map_.max_x_ = 0;

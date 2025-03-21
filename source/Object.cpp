@@ -8,9 +8,7 @@ Object::Object(){
     rect_.h = 0;
 }
 
-Object::~Object(){
-    Free();
-}
+Object::~Object(){ Free(); }
 
 bool Object::LoadImg(string path, SDL_Renderer* screen){
     Free();

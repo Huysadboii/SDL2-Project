@@ -24,7 +24,7 @@ void Text::Free(){
         text_val_ = NULL;
     }
 }
-//
+// xem lai
 void Text::SetColor(Uint8 red, Uint8 green, Uint8 blue){
     text_color_ = {red, green, blue};
 }

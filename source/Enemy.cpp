@@ -16,7 +16,7 @@ Enemy::~Enemy(){}
 
 bool Enemy::LoadImg(string path, SDL_Renderer* screen){
     bool ret = Object::LoadImg(path, screen);
-    if(ret){ // if load image successfully
+    if(ret){
         width_frame_ = rect_.w / ENEMY_FRAME;
         height_frame_ = rect_.h;
     }

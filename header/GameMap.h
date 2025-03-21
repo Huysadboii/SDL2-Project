@@ -4,7 +4,6 @@
 #include "constant.h"
 #include "Object.h"
 
-// map cung la vat the nen ke thua Object
 class TiteMat : public Object{
 public:
     TiteMat(){;}
@@ -17,11 +16,8 @@ public:
     GameMap(){;}
     ~GameMap(){;}
 
-    // doc thong tin tu file so do map
     void LoadMap(char* name);
-    // load hinh anh cho tilemat
     void LoadTiles(SDL_Renderer* screen);
-    // ve map
     void DrawMap(SDL_Renderer* screen);
     Map getMap() {return game_map_;}
     void SetMap(Map& map_data){game_map_ = map_data;};
