@@ -1,4 +1,4 @@
-#include "../header/Bullet.h"
+#include "Bullet.h"
 
 Bullet::Bullet(){
     x_val_ = 0;

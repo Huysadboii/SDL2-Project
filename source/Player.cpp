@@ -1,4 +1,4 @@
-#include "../header/Player.h"
+#include "Player.h"
 
 Player::Player(){
     x_val_ = 0;
@@ -214,9 +214,9 @@ void Player::DoPlayer(Map& map_data){
 
         if(come_back_time_ == 0){
 
-            if(x_pos_ > 9*TILE_SIZE){
-                x_pos_ -= 9*TILE_SIZE;
-                map_x_ -= 9*TILE_SIZE;
+            if(x_pos_ > RESPAWN*TILE_SIZE){
+                x_pos_ -= RESPAWN*TILE_SIZE;
+                map_x_ -= RESPAWN*TILE_SIZE;
             } else {
                 x_pos_ = 0;
             }
@@ -233,7 +233,7 @@ void Player::DoPlayer(Map& map_data){
 
 void Player::CenterEntityOnMap(Map& map_data){
     map_data.start_x_ = x_pos_ - (SCREEN_WIDTH/2);
-    if(map_data.start_x_ < 0){ // di lui
+    if(map_data.start_x_ < 0){
         map_data.start_x_ = 0;
     } else if(map_data.start_x_ + SCREEN_WIDTH >= map_data.max_x_){
         map_data.start_x_ = map_data.max_x_ - SCREEN_WIDTH;

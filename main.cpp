@@ -1,11 +1,10 @@
-#include "header/constant.h"
-#include "header/Object.h"
-#include "header/GameMap.h"
-#include "header/Player.h"
-#include "header/Enemy.h"
-#include "header/Explosion.h"
-#include "header/Text.h"
-using namespace std;
+#include "source/constant.h"
+#include "source/Object.h"
+#include "source/GameMap.h"
+#include "source/Player.h"
+#include "source/Enemy.h"
+#include "source/Explosion.h"
+#include "source/Text.h"
 Object g_background;
 TTF_Font* font_time = NULL;
 
@@ -125,6 +124,11 @@ int main(int argc, char* argv[])
 
     Text time_count;
     time_count.SetColor(Text::WHITE_TEXT);
+    Text score_game;
+    score_game.SetColor(Text::WHITE_TEXT);
+    UINT score_value = 0;
+    Text coin_count;
+    coin_count.SetColor(Text::WHITE_TEXT);
 
     bool is_quit = false;
     while(!is_quit){
@@ -231,7 +235,7 @@ int main(int argc, char* argv[])
                         SDL_Rect bRect = p_bullet->GetRect();
                         bool bCol = Collision::CheckCollision(bRect, eRect);
                         if(bCol){
-
+                            score_value += 1;
                             for(int i=0; i<EXPLOSION_FRAME; i++){
                                 // ban dau vi tri o mep => tru di 1 nua frame
                                 int x_pos = p_bullet->GetRect().x - frame_exp_width*0.5;
@@ -267,6 +271,20 @@ int main(int argc, char* argv[])
             time_count.LoadFromRenderText(font_time, g_screen);
             time_count.RenderText(g_screen, SCREEN_WIDTH - 200, TEXT_FONT);
         }
+
+        // show score
+        string val_str_score = to_string(score_value);
+        string strScore("Score: ");
+        strScore += val_str_score;
+        score_game.SetText(strScore);
+        score_game.LoadFromRenderText(font_time, g_screen);
+        score_game.RenderText(g_screen, SCREEN_WIDTH*0.5 - 50, TEXT_FONT);
+
+        int coin_count_val = p_player.get_coin_count();
+        string str_coin_count = to_string(coin_count_val);
+        coin_count.SetText(str_coin_count);
+        coin_count.LoadFromRenderText(font_time, g_screen);
+        coin_count.RenderText(g_screen, SCREEN_WIDTH*0.5 - 250, TEXT_FONT);
 
         SDL_RenderPresent(g_screen);
         Uint32 frameTime = SDL_GetTicks() - frameStart;

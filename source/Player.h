@@ -34,6 +34,7 @@ class Player : public Object{
         void HandleBullet(SDL_Renderer* des);
         void RemoveBullet(const int& idx);
         void IncreaseCoin();
+        int get_coin_count() const {return coin_count;}
 
         void set_comeback_time(const int& cb_time){come_back_time_ = cb_time;}
 

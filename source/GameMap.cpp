@@ -1,6 +1,4 @@
-#include "../header/GameMap.h"
-using namespace std;
-// cpl
+#include "GameMap.h"
 
 void GameMap::LoadMap(char* name){
 

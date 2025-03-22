@@ -1,4 +1,4 @@
-#include "../header/Enemy.h"
+#include "Enemy.h"
 // xem lai
 Enemy::Enemy(){
     x_val_ = 0; y_val_ = 0;

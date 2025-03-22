@@ -1,4 +1,4 @@
-#include "../header/Explosion.h"
+#include "Explosion.h"
 
 Explosion::Explosion()
 {

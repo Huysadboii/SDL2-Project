@@ -20,12 +20,13 @@ static SDL_Event g_event;
 #define SCREEN_BPP 32
 #define TEXT_FONT 20
 
-// color code to neutralize character
+// game play
 #define COLOR_KEY_R 167
 #define COLOR_KEY_G 175
 #define COLOR_KEY_B 180
 #define RENDER_DRAW_COLOR 255
 #define FPS 60
+#define TIME_TOTAL 300
 
 //map properties
 #define TILE_SIZE 64
@@ -35,7 +36,6 @@ static SDL_Event g_event;
 #define BLANK_TILE 0
 #define COIN_TILE 4
 #define EXPLOSION_FRAME 8
-#define TIME_TOTAL 300
 
 // properties for player
 #define GRAVITY 1
@@ -46,6 +46,7 @@ static SDL_Event g_event;
 #define DECLINE_BULLET 0.25 // increase to decline bullet
 #define RESURRECT 500
 #define LIFE 3
+#define RESPAWN 9
 
 // enemy
 #define PLAYER_FRAME 8

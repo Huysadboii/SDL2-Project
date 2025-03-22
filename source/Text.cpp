@@ -1,4 +1,4 @@
-#include "../header/Text.h"
+#include "Text.h"
 // xem lai
 Text::Text(){
     text_color_ = {255, 255, 255};

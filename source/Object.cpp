@@ -1,4 +1,4 @@
-#include "../header/Object.h"
+#include "Object.h"
 
 Object::Object(){
     p_object_ = NULL;
