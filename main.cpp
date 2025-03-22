@@ -5,6 +5,7 @@
 #include "source/Enemy.h"
 #include "source/Explosion.h"
 #include "source/Text.h"
+#include "source/Display.h"
 Object g_background;
 TTF_Font* font_time = NULL;
 
@@ -109,6 +110,12 @@ int main(int argc, char* argv[])
     p_player.LoadImg("img//player_right.png", g_screen);
     p_player.set_clips(); // hieu ung chuyen dong
 
+    Display display;
+    display.Init(g_screen);
+    DisplayCoin display_coin;
+    display_coin.Init(g_screen);
+    display_coin.SetPos(SCREEN_WIDTH*0.5 - 300, 8);
+
     vector<Enemy*> enemies = MakeEnemyList();
 
     Explosion exp_enemy;
@@ -151,6 +158,8 @@ int main(int argc, char* argv[])
 
         game_map.SetMap(map_data);
         game_map.DrawMap(g_screen);
+        display.Show(g_screen);
+        display_coin.Show(g_screen);
 
         // xu li: va cham voi player
         for(int i = 0; i < enemies.size(); i++){
@@ -200,9 +209,11 @@ int main(int argc, char* argv[])
                     if(num_eliminated <= LIFE){
                         p_player.SetRect(0, 0);
                         p_player.set_comeback_time(COMEBACK_TIME);
+                        display.Decrease();
+                        display.Render(g_screen);
                         continue;
                     } else{
-                        SDL_Delay(RESURRECT);
+                        SDL_Delay(GAMEOVER);
                         if(MessageBox(NULL, "GAME OVER", "Oops", MB_OK | MB_ICONSTOP) == IDOK){
                             p_threat->Free();
                             close();

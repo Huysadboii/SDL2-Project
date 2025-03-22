@@ -27,6 +27,7 @@ static SDL_Event g_event;
 #define RENDER_DRAW_COLOR 255
 #define FPS 60
 #define TIME_TOTAL 300
+#define GAMEOVER 500
 
 //map properties
 #define TILE_SIZE 64
@@ -44,7 +45,6 @@ static SDL_Event g_event;
 #define MAX_FALL_SPEED 10
 #define COMEBACK_TIME 100
 #define DECLINE_BULLET 0.25 // increase to decline bullet
-#define RESURRECT 500
 #define LIFE 3
 #define RESPAWN 9
 
