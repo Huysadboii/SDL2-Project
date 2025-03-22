@@ -24,7 +24,7 @@ Player::Player(){
 Player::~Player(){}
 
 bool Player::LoadImg(string path, SDL_Renderer* screen){
-    bool ret = BaseObject::LoadImg(path, screen);
+    bool ret = Object::LoadImg(path, screen);
     if(ret){
         width_frame_ = rect_.w/PLAYER_FRAME;
         height_frame_ = rect_.h;
@@ -70,7 +70,7 @@ void Player::Show(SDL_Renderer* des){
         frame_ = 0;
     }
     
-    if(come_back_time_ == 0){ // do ton tai nguyen hoi sinh
+    if(come_back_time_ == 0){
         rect_.x = x_pos_ - map_x_;
         rect_.y = y_pos_ - map_y_;
         

@@ -3,10 +3,10 @@
 using namespace std;
 
 #include "constant.h"
-#include "BaseObject.h"
+#include "Object.h"
 #include "Bullet.h"
 
-class Player : public BaseObject{
+class Player : public Object{
     public:
         Player();
         ~Player();
@@ -50,7 +50,7 @@ class Player : public BaseObject{
         int width_frame_;
         int height_frame_;
 
-        SDL_Rect frame_clip_[PLAYER_FRAME]; // 8 frame cua player
+        SDL_Rect frame_clip_[PLAYER_FRAME];
         Input input_type_; // bien luu trang thai player
         int frame_;
         int status_; // trang thai cua player
@@ -60,7 +60,7 @@ class Player : public BaseObject{
         int map_x_;
         int map_y_;
 
-        int come_back_time_; // thoi gian hoi sinh
+        int come_back_time_;
 };
 
 #endif

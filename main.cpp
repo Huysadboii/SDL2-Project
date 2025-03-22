@@ -1,50 +1,44 @@
 #include "header/constant.h"
-#include "header/BaseObject.h"
+#include "header/Object.h"
 #include "header/GameMap.h"
 #include "header/Player.h"
 #include "header/Enemy.h"
 #include "header/Explosion.h"
+#include "header/Text.h"
 using namespace std;
-BaseObject g_background;
+Object g_background;
+TTF_Font* font_time = NULL;
 
-// initialize SDL environment
 bool InitData(){
     bool success = true;
-    // set up initial environment
     int ret = SDL_Init(SDL_INIT_VIDEO);
-    if(ret < 0){ 
-        return false;
-    }
+    if(ret < 0){ return false; }
     // set up quality of the image
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
     // create window
-    g_window = SDL_CreateWindow(
-        "Game SDL",
-        SDL_WINDOWPOS_UNDEFINED, 
-        SDL_WINDOWPOS_UNDEFINED,
-        SCREEN_WIDTH, 
-        SCREEN_HEIGHT, 
-        SDL_WINDOW_SHOWN
-    );
+    g_window = SDL_CreateWindow("Game SDL",
+                                SDL_WINDOWPOS_UNDEFINED, 
+                                SDL_WINDOWPOS_UNDEFINED,
+                                SCREEN_WIDTH, 
+                                SCREEN_HEIGHT, 
+                                SDL_WINDOW_SHOWN);
     if(g_window == NULL){
         success = false;
+
     } else {
+
         g_screen = SDL_CreateRenderer(g_window, -1, SDL_RENDERER_ACCELERATED);
         if(g_screen == NULL){
             success = false;
         } else {
-            SDL_SetRenderDrawColor(
-                g_screen, 
-                RENDER_DRAW_COLOR, 
-                RENDER_DRAW_COLOR,
-                RENDER_DRAW_COLOR, 
-                RENDER_DRAW_COLOR
-            );
+            SDL_SetRenderDrawColor(g_screen, 255, 255,255, 255);
             int imgFlags = IMG_INIT_PNG;
-            if( ! ( IMG_Init(imgFlags) && imgFlags ) ){
-                success = false;
-            }
+            if( ! ( IMG_Init(imgFlags) && imgFlags ) ){ success = false; }
         }
+
+        if(TTF_Init() == -1){ success = false; }
+        font_time = TTF_OpenFont("font//dlxfont_.ttf", TEXT_FONT);
+        if(font_time == NULL){ success = false; }
     }
     return success;
 }
@@ -54,10 +48,8 @@ bool loadBackground(){
 }
 void close(){
     g_background.Free();
-
     SDL_DestroyRenderer(g_screen);
     g_screen = NULL;
-
     SDL_DestroyWindow(g_window);
     g_window = NULL;
 
@@ -92,9 +84,9 @@ vector<Enemy*> MakeEnemyList(){
         if(p_enemy != NULL){
             p_enemy->LoadImg("img//threat_level.png", g_screen);
             p_enemy->set_clips();
+            p_enemy->set_type_move(Enemy::STATIC);
             p_enemy->set_x_pos(1000 + i*500);
             p_enemy->set_y_pos(250);
-            p_enemy->set_type_move(Enemy::STATIC);
             p_enemy->set_input_left(0);
             list_enemies.push_back(p_enemy);
         }
@@ -119,6 +111,7 @@ int main(int argc, char* argv[])
     p_player.set_clips(); // hieu ung chuyen dong
 
     vector<Enemy*> enemies = MakeEnemyList();
+
     Explosion exp_enemy;
     bool eRet = exp_enemy.LoadImg("img//explode.png", g_screen);
     if(!eRet){ return -1; }
@@ -128,20 +121,21 @@ int main(int argc, char* argv[])
     bool mRet = exp_main.LoadImg("img//explode.png", g_screen);
     if(!mRet){ return -1; }
     exp_main.set_clip();
-    int num_eliminated = 1;
+    int num_eliminated = 0;
+
+    Text time_count;
+    time_count.SetColor(Text::WHITE_TEXT);
 
     bool is_quit = false;
     while(!is_quit){
 
         Uint32 frameStart = SDL_GetTicks();
         while(SDL_PollEvent(&g_event) != 0){
-            if(g_event.type == SDL_QUIT){
-                is_quit = true;
-            }
+            if(g_event.type == SDL_QUIT){is_quit = true;}
             p_player.Handle_Input_Action(g_event, g_screen);
         }
 
-        SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(g_screen, 255, 255,255, 255);
         SDL_RenderClear(g_screen);
         g_background.Render(g_screen, NULL);
         Map map_data = game_map.getMap();
@@ -154,7 +148,7 @@ int main(int argc, char* argv[])
         game_map.SetMap(map_data);
         game_map.DrawMap(g_screen);
 
-        // xu li: enemy && va cham voi player
+        // xu li: va cham voi player
         for(int i = 0; i < enemies.size(); i++){
             Enemy* p_threat = enemies.at(i);
             if(p_threat != NULL){
@@ -170,28 +164,18 @@ int main(int argc, char* argv[])
                 for(int j=0; j<tBullet_list.size(); j++){
                     Bullet* pt_bullet = tBullet_list.at(j);
                     if(pt_bullet){
-                        bCol1 = SDLconstant::CheckCollision(pt_bullet->GetRect(), rect_player);
+                        bCol1 = Collision::CheckCollision(pt_bullet->GetRect(), rect_player);
                         if(bCol1){
                             p_threat->RemoveBullet(j);
-                            for(int i=0; i<EXPLOSION_FRAME; i++){
-                                int frame_exp_width = exp_enemy.get_frame_width();
-                                int frame_exp_height = exp_enemy.get_frame_height();
-                                // ban dau vi tri o mep => tru di 1 nua frame
-                                int x_pos = p_threat->GetRect().x - frame_exp_width*0.5;
-                                int y_pos = p_threat->GetRect().y - frame_exp_height*0.5;
-                                exp_enemy.set_frame(i);
-                                exp_enemy.SetRect(x_pos, y_pos);
-                                exp_enemy.Show(g_screen);
-                            }
-                            p_threat->Free();
-                            enemies.erase(enemies.begin() + i);
+                            Bullet* p_bullet = new Bullet();
+                            p_threat->InitBullet(p_bullet, g_screen, 2);
                             break;
                         }
                     }
                 }
 
                 SDL_Rect rect_threat = p_threat->GetRectFrame();
-                bool bCol2 = SDLconstant::CheckCollision(rect_player, rect_threat);
+                bool bCol2 = Collision::CheckCollision(rect_player, rect_threat);
                 if(bCol2 || bCol1){
                     int width_exp_main = exp_main.get_frame_width();
                     int height_exp_main = exp_main.get_frame_height();
@@ -203,14 +187,18 @@ int main(int argc, char* argv[])
                         exp_main.Show(g_screen);
                         SDL_RenderPresent(g_screen);
                     }
-
+                    if(bCol2){
+                        p_threat->Free();
+                        enemies.erase(enemies.begin() + i);
+                    }
+                    
                     num_eliminated++;
                     if(num_eliminated <= LIFE){
                         p_player.SetRect(0, 0);
                         p_player.set_comeback_time(COMEBACK_TIME);
-                        SDL_Delay(RESURRECT);
                         continue;
                     } else{
+                        SDL_Delay(RESURRECT);
                         if(MessageBox(NULL, "GAME OVER", "Oops", MB_OK | MB_ICONSTOP) == IDOK){
                             p_threat->Free();
                             close();
@@ -241,7 +229,7 @@ int main(int argc, char* argv[])
                         eRect.h = enemy->get_height_frame();
 
                         SDL_Rect bRect = p_bullet->GetRect();
-                        bool bCol = SDLconstant::CheckCollision(bRect, eRect);
+                        bool bCol = Collision::CheckCollision(bRect, eRect);
                         if(bCol){
 
                             for(int i=0; i<EXPLOSION_FRAME; i++){
@@ -262,11 +250,27 @@ int main(int argc, char* argv[])
             }
         }
         
+        // show game time
+        string str_time = "Time: ";
+        Uint32 time_val = SDL_GetTicks()/1000;
+        Uint32 val_time = TIME_TOTAL - time_val;
+        if(val_time <= 0){
+            if(MessageBox(NULL, "GAME OVER", "Oops", MB_OK | MB_ICONSTOP) == IDOK){
+                is_quit = true;
+                break;
+            }
+
+        } else {
+            string str_val = to_string(val_time);
+            str_time += str_val;
+            time_count.SetText(str_time);
+            time_count.LoadFromRenderText(font_time, g_screen);
+            time_count.RenderText(g_screen, SCREEN_WIDTH - 200, TEXT_FONT);
+        }
+
         SDL_RenderPresent(g_screen);
         Uint32 frameTime = SDL_GetTicks() - frameStart;
-        if(frameDelay > frameTime){
-            SDL_Delay(frameDelay - frameTime);
-        }
+        if(frameDelay > frameTime){SDL_Delay(frameDelay - frameTime);}
     }
 
     for(int i=0; i<enemies.size(); i++){

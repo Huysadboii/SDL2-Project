@@ -1,10 +1,10 @@
 #ifndef BULLET_H_
 #define BULLET_H_
 
-#include "BaseObject.h"
+#include "Object.h"
 #include "constant.h"
 
-class Bullet : public BaseObject{
+class Bullet : public Object{
 
     public:
         Bullet();
