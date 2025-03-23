@@ -6,6 +6,7 @@
 #include "source/Explosion.h"
 #include "source/Text.h"
 #include "source/Display.h"
+#include "source/AssistDisplay.h"
 Object g_background;
 TTF_Font* font_time = NULL;
 
@@ -117,12 +118,10 @@ int main(int argc, char* argv[])
     display_coin.SetPos(SCREEN_WIDTH*0.5 - 300, 8);
 
     vector<Enemy*> enemies = MakeEnemyList();
-
     Explosion exp_enemy;
     bool eRet = exp_enemy.LoadImg("img//explode.png", g_screen);
     if(!eRet){ return -1; }
     exp_enemy.set_clip();
-
     Explosion exp_main;
     bool mRet = exp_main.LoadImg("img//explode.png", g_screen);
     if(!mRet){ return -1; }
@@ -158,6 +157,14 @@ int main(int argc, char* argv[])
 
         game_map.SetMap(map_data);
         game_map.DrawMap(g_screen);
+
+        Geometry rectangle(0, 0, SCREEN_WIDTH, DISPLAY_HEIGHT);
+        ColorDat color(36, 36, 36);
+        AssistDisplay::RenderRectangle(rectangle, color, g_screen);
+        Geometry outLine(OUTLINE_WIDTH, OUTLINE_WIDTH, SCREEN_WIDTH - 1, DISPLAY_HEIGHT - 2*OUTLINE_WIDTH);
+        ColorDat color2(RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+        AssistDisplay::RenderOutline(outLine, color2, g_screen);
+
         display.Show(g_screen);
         display_coin.Show(g_screen);
 
