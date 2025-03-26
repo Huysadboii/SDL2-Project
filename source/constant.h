@@ -14,6 +14,11 @@ static SDL_Window* g_window = NULL;
 static SDL_Renderer* g_screen = NULL;
 static SDL_Event g_event;
 
+#define BULLET_SOUND 1
+static Mix_Chunk* g_sound_bullet[BULLET_SOUND];
+static Mix_Chunk* g_sound_exp = NULL;
+static Mix_Chunk* g_sound_exp_player = NULL;
+
 //screen
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 640

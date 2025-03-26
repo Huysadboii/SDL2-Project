@@ -7,8 +7,7 @@
 
 class Enemy : public Object{
     public:
-        Enemy();
-        ~Enemy();
+        Enemy(); ~Enemy();
         void set_x_val(const double& xVal){ x_val_ = xVal; }
         void set_y_val(const double& yVal){ y_val_ = yVal; }
         void set_x_pos(const double& xPos){ x_pos_ = xPos; }
@@ -40,13 +39,11 @@ class Enemy : public Object{
         vector<Bullet*> get_bullet_list() const { return bullet_list_; }
         void set_bullet_list(const vector<Bullet*>& bullet_list){ bullet_list_ = bullet_list; }
         void InitBullet(Bullet* p_bullet, SDL_Renderer* screen, int enemy_type);
-        void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit);
+        void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit, Map& map_data);
         void RemoveBullet(const int& idx);
 
     private:
-        int frame_;
-        int width_frame_;
-        int height_frame_;
+        int frame_, width_frame_, height_frame_;
         SDL_Rect frame_clip_[ENEMY_FRAME];
 
         bool on_ground_;
@@ -56,8 +53,7 @@ class Enemy : public Object{
         int map_x_, map_y_; // check limit of map
 
         int type_move_;
-        int animation_a_;
-        int animation_b_;
+        int animation_a_, animation_b_;
         Input input_type_;
 
         vector<Bullet*> bullet_list_;

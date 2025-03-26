@@ -1,12 +1,10 @@
 #include "Player.h"
 
 Player::Player(){
-    x_val_ = 0;
-    y_val_ = 0;
-    x_pos_ = 0;
-    y_pos_ = 0;
-    width_frame_ = 0;
-    height_frame_ = 0;
+    x_val_ = 0; y_val_ = 0;
+    x_pos_ = 0; y_pos_ = 0;
+    map_x_ = 0; map_y_ = 0;
+    width_frame_ = 0; height_frame_ = 0;
     frame_ = 0;
     status_ = -1;
     input_type_.left_ = 0;
@@ -15,8 +13,6 @@ Player::Player(){
     input_type_.down_ = 0;
     input_type_.up_ = 0;
     on_ground_ = false;
-    map_x_ = 0;
-    map_y_ = 0;
     come_back_time_ = 0;
     coin_count = 0;
 }
@@ -62,14 +58,9 @@ void Player::Show(SDL_Renderer* des){
     
     if(input_type_.left_ == 1 || input_type_.right_ == 1){
         frame_++;
-    } else {
-        frame_ = 0;
-    }
+    } else { frame_ = 0; }
     
-    if(frame_ >= 8){
-        frame_ = 0;
-    }
-    
+    if(frame_ >= PLAYER_FRAME){ frame_ = 0; }
     if(come_back_time_ == 0){
         rect_.x = x_pos_ - map_x_;
         rect_.y = y_pos_ - map_y_;
@@ -81,7 +72,7 @@ void Player::Show(SDL_Renderer* des){
     
 }
 
-void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen){
+void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen, Mix_Chunk* bullet_sound[0]){
     
     if(events.type == SDL_KEYDOWN){
 
@@ -121,6 +112,7 @@ void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen){
         if(events.button.button == SDL_BUTTON_LEFT){
 
             Bullet* p_bullet = new Bullet();
+            int ret = Mix_PlayChannel(-1, bullet_sound[0], 0);
 
             if(status_ == WALK_LEFT){
                 p_bullet->LoadImg("img//leftBullet.png", screen);
@@ -144,7 +136,7 @@ void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen){
 
 }
 
-void Player::HandleBullet(SDL_Renderer* des){
+void Player::HandleBullet(SDL_Renderer* des, Map& map_data){
 
     for(int i=0; i<p_bullet_list_.size(); i++){
 
@@ -153,7 +145,7 @@ void Player::HandleBullet(SDL_Renderer* des){
         if(p_bullet != NULL){
 
             if(p_bullet->get_is_move()){
-                p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
+                p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT, map_data);
                 p_bullet->Render(des);
             } else {
                 p_bullet_list_.erase(p_bullet_list_.begin() + i);
@@ -186,10 +178,7 @@ void Player::DoPlayer(Map& map_data){
     if(come_back_time_ == 0){
         x_val_ = 0;
         y_val_ += GRAVITY;
-
-        if(y_val_ >= MAX_FALL_SPEED){
-            y_val_ = MAX_FALL_SPEED;
-        }
+        if(y_val_ >= MAX_FALL_SPEED){ y_val_ = MAX_FALL_SPEED; }
 
         if(input_type_.left_ == 1){
             x_val_ -= PLAYER_SPEED;
@@ -248,17 +237,12 @@ void Player::CenterEntityOnMap(Map& map_data){
 }
 
 void Player::CheckToMap(Map& map_data){
-    int x1 = 0;
-    int x2 = 0;
-    int y1 = 0;
-    int y2 = 0;
-
     // check horizontal
     int height_min = height_frame_ < TILE_SIZE ? height_frame_ : TILE_SIZE;
-    x1 = (x_pos_ + x_val_)/TILE_SIZE;
-    x2 = (x_pos_ + x_val_ + width_frame_ - 1)/TILE_SIZE;
-    y1 = (y_pos_)/TILE_SIZE;
-    y2 = (y_pos_ + height_min - 1)/TILE_SIZE;
+    int x1 = (x_pos_ + x_val_)/TILE_SIZE;
+    int x2 = (x_pos_ + x_val_ + width_frame_ - 1)/TILE_SIZE;
+    int y1 = (y_pos_)/TILE_SIZE;
+    int y2 = (y_pos_ + height_min - 1)/TILE_SIZE;
     // check player co nam trong ban do hay khong
     if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y){
 

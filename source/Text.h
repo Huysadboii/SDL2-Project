@@ -5,8 +5,7 @@
 
 class Text{
     public:
-        Text();
-        ~Text();
+        Text(); ~Text();
         enum TextColor{
             RED_TEXT = 0,
             WHITE_TEXT = 1,
@@ -32,8 +31,7 @@ class Text{
         string str_val_;
         SDL_Color text_color_;
         SDL_Texture* text_val_;
-        int width_;
-        int height_;
+        int width_, height_;
 };
 
 #endif

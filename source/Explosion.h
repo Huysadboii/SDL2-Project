@@ -7,8 +7,7 @@
 class Explosion : public Object
 {
     public:
-        Explosion();
-        ~Explosion();
+        Explosion(); ~Explosion();
 
         void set_clip();
         void set_frame(const int& fr) { frame = fr; }
@@ -19,8 +18,8 @@ class Explosion : public Object
 
     private:
         int frame;
-        int frame_width; // kich thuoc cua moi frame
-        int frame_height;
+         // kich thuoc cua moi frame
+        int frame_width, frame_height;
         SDL_Rect frame_clip_[EXPLOSION_FRAME];
 };
 

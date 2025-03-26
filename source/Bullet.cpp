@@ -1,4 +1,5 @@
 #include "Bullet.h"
+// need complete
 
 Bullet::Bullet(){
     x_val_ = 0;
@@ -19,7 +20,7 @@ void Bullet::LoadImgBullet(SDL_Renderer* des){
     }
 }
 
-void Bullet::HandleMove(const int& x_border, const int& y_border){
+void Bullet::HandleMove(const int& x_border, const int& y_border, Map& map_data){
 
     if(bullet_direction_ == DIR_RIGHT){
         rect_.x += x_val_;
@@ -34,4 +35,9 @@ void Bullet::HandleMove(const int& x_border, const int& y_border){
             is_move_ = false;
         }
     }
+    CheckToMap(map_data);
+}
+// need complete
+void Bullet::CheckToMap(Map& map_data){
+    // 
 }

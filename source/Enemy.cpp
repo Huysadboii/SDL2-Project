@@ -227,7 +227,7 @@ void Enemy::InitBullet(Bullet* p_bullet, SDL_Renderer* screen, int enemy_type){
     }
 }
 
-void Enemy::MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit){
+void Enemy::MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit, Map& map_data){
     for(int i = 0; i < bullet_list_.size(); i++){
 
         Bullet* p_bullet = bullet_list_.at(i);
@@ -236,7 +236,7 @@ void Enemy::MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_li
             if(p_bullet->get_is_move()){
                 int bullet_distance = rect_.x + width_frame_ - p_bullet->GetRect().x;
                 if(bullet_distance < MAX_BULLET_DIS && bullet_distance > 0){
-                    p_bullet->HandleMove(x_limit, y_limit);
+                    p_bullet->HandleMove(x_limit, y_limit, map_data);
                     p_bullet->Render(screen);
                 } else {
                     p_bullet->set_is_move(false);

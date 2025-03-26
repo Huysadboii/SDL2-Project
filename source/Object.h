@@ -1,4 +1,3 @@
-// kiem tra private
 #ifndef OBJECT_H_
 #define OBJECT_H_
 
@@ -7,8 +6,7 @@
 class Object
 {
     public:
-        Object();
-        ~Object();
+        Object(); ~Object();
 
         void SetRect(const int& x, const int& y){ rect_.x = x; rect_.y = y; };
         SDL_Rect GetRect() { return rect_; }
@@ -17,6 +15,7 @@ class Object
         void Render(SDL_Renderer* des, const SDL_Rect* clip = NULL);
         void Free();
 
+    protected:
         SDL_Texture* p_object_;
         SDL_Rect rect_; // position of object
         // pos is the position on the whole map

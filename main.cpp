@@ -14,9 +14,15 @@ bool InitData(){
     bool success = true;
     int ret = SDL_Init(SDL_INIT_VIDEO);
     if(ret < 0){ return false; }
-    // set up quality of the image
+    // sound
+    if(Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1){ success = false; }
+    g_sound_bullet[0] = Mix_LoadWAV("sound//Fire1.wav");
+    g_sound_exp = Mix_LoadWAV("sound//Explosion1.wav");
+    g_sound_exp_player = Mix_LoadWAV("sound//Explosion1.wav");
+    if(g_sound_bullet[0] == NULL || g_sound_exp == NULL || g_sound_exp_player == NULL){ success = false; }
+    
+    // window
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-    // create window
     g_window = SDL_CreateWindow("Game SDL",
                                 SDL_WINDOWPOS_UNDEFINED, 
                                 SDL_WINDOWPOS_UNDEFINED,
@@ -111,8 +117,8 @@ int main(int argc, char* argv[])
     p_player.LoadImg("img//player_right.png", g_screen);
     p_player.set_clips(); // hieu ung chuyen dong
 
-    Display display;
-    display.Init(g_screen);
+    Display display_score;
+    display_score.Init(g_screen);
     DisplayCoin display_coin;
     display_coin.Init(g_screen);
     display_coin.SetPos(SCREEN_WIDTH*0.5 - 300, 8);
@@ -122,6 +128,7 @@ int main(int argc, char* argv[])
     bool eRet = exp_enemy.LoadImg("img//explode.png", g_screen);
     if(!eRet){ return -1; }
     exp_enemy.set_clip();
+
     Explosion exp_main;
     bool mRet = exp_main.LoadImg("img//explode.png", g_screen);
     if(!mRet){ return -1; }
@@ -142,7 +149,7 @@ int main(int argc, char* argv[])
         Uint32 frameStart = SDL_GetTicks();
         while(SDL_PollEvent(&g_event) != 0){
             if(g_event.type == SDL_QUIT){is_quit = true;}
-            p_player.Handle_Input_Action(g_event, g_screen);
+            p_player.Handle_Input_Action(g_event, g_screen, g_sound_bullet);
         }
 
         SDL_SetRenderDrawColor(g_screen, 255, 255,255, 255);
@@ -150,7 +157,7 @@ int main(int argc, char* argv[])
         g_background.Render(g_screen, NULL);
         Map map_data = game_map.getMap();
         
-        p_player.HandleBullet(g_screen);
+        p_player.HandleBullet(g_screen, map_data);
         p_player.SetMapXY(map_data.start_x_, map_data.start_y_);
         p_player.DoPlayer(map_data);
         p_player.Show(g_screen);
@@ -165,7 +172,7 @@ int main(int argc, char* argv[])
         ColorDat color2(RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
         AssistDisplay::RenderOutline(outLine, color2, g_screen);
 
-        display.Show(g_screen);
+        display_score.Show(g_screen);
         display_coin.Show(g_screen);
 
         // xu li: va cham voi player
@@ -175,7 +182,7 @@ int main(int argc, char* argv[])
                 p_threat->SetMapXY(map_data.start_x_, map_data.start_y_);
                 p_threat->ImpMoveType(g_screen);
                 p_threat->DoEnemy(map_data);
-                p_threat->MakeBullet(g_screen, SCREEN_WIDTH, SCREEN_HEIGHT);
+                p_threat->MakeBullet(g_screen, SCREEN_WIDTH, SCREEN_HEIGHT, map_data);
                 p_threat->Show(g_screen);
 
                 SDL_Rect rect_player = p_player.GetRectFrame();
@@ -186,9 +193,6 @@ int main(int argc, char* argv[])
                     if(pt_bullet){
                         bCol1 = Collision::CheckCollision(pt_bullet->GetRect(), rect_player);
                         if(bCol1){
-                            p_threat->RemoveBullet(j);
-                            Bullet* p_bullet = new Bullet();
-                            p_threat->InitBullet(p_bullet, g_screen, 2);
                             break;
                         }
                     }
@@ -210,14 +214,15 @@ int main(int argc, char* argv[])
                     if(bCol2){
                         p_threat->Free();
                         enemies.erase(enemies.begin() + i);
+                        score_value++;
                     }
-                    
+                    Mix_PlayChannel(-1, g_sound_exp_player, 0);
                     num_eliminated++;
                     if(num_eliminated <= LIFE){
                         p_player.SetRect(0, 0);
                         p_player.set_comeback_time(COMEBACK_TIME);
-                        display.Decrease();
-                        display.Render(g_screen);
+                        display_score.Decrease();
+                        display_score.Render(g_screen);
                         continue;
                     } else{
                         SDL_Delay(GAMEOVER);
@@ -253,7 +258,7 @@ int main(int argc, char* argv[])
                         SDL_Rect bRect = p_bullet->GetRect();
                         bool bCol = Collision::CheckCollision(bRect, eRect);
                         if(bCol){
-                            score_value += 1;
+                            score_value++;
                             for(int i=0; i<EXPLOSION_FRAME; i++){
                                 // ban dau vi tri o mep => tru di 1 nua frame
                                 int x_pos = p_bullet->GetRect().x - frame_exp_width*0.5;
@@ -263,6 +268,8 @@ int main(int argc, char* argv[])
                                 exp_enemy.Show(g_screen);
                             }
 
+                            Mix_PlayChannel(-1, g_sound_exp, 0);
+                            p_bullet->Free();
                             p_player.RemoveBullet(i);
                             enemy->Free();
                             enemies.erase(enemies.begin() + j);
@@ -285,19 +292,33 @@ int main(int argc, char* argv[])
         } else {
             string str_val = to_string(val_time);
             str_time += str_val;
+            if(val_time < TIME_TOTAL/2) { time_count.SetColor(Text::RED_TEXT); }
             time_count.SetText(str_time);
             time_count.LoadFromRenderText(font_time, g_screen);
             time_count.RenderText(g_screen, SCREEN_WIDTH - 200, TEXT_FONT);
         }
 
         // show score
-        string val_str_score = to_string(score_value);
         string strScore("Score: ");
-        strScore += val_str_score;
+        strScore = strScore + to_string(score_value) + "/" + to_string(2*ENEMY_OBJECT);
+
+        if(score_value == 2*ENEMY_OBJECT){
+            enemies.back()->Free();
+            enemies.pop_back();
+            SDL_Delay(GAMEOVER);
+            if(MessageBox(NULL, "YOU WIN", "Congratulation", MB_OK | MB_ICONINFORMATION) == IDOK){
+                is_quit = true;
+                break;
+            }
+        } else if (score_value > ENEMY_OBJECT){
+            score_game.SetColor(Text::RED_TEXT);
+        }
+
         score_game.SetText(strScore);
         score_game.LoadFromRenderText(font_time, g_screen);
         score_game.RenderText(g_screen, SCREEN_WIDTH*0.5 - 50, TEXT_FONT);
 
+        // show coin
         int coin_count_val = p_player.get_coin_count();
         string str_coin_count = to_string(coin_count_val);
         coin_count.SetText(str_coin_count);

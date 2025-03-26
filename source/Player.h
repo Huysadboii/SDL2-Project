@@ -1,6 +1,5 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
-using namespace std;
 
 #include "constant.h"
 #include "Object.h"
@@ -8,8 +7,7 @@ using namespace std;
 
 class Player : public Object{
     public:
-        Player();
-        ~Player();
+        Player(); ~Player();
         enum WalkType{
             WALK_RIGHT = 0,
             WALK_LEFT = 1,
@@ -18,7 +16,7 @@ class Player : public Object{
         // kich thuoc player thong so rieng => khai bao lai
         bool LoadImg(string path, SDL_Renderer* screen); 
         void Show(SDL_Renderer* des);
-        void Handle_Input_Action(SDL_Event events, SDL_Renderer* screen);
+        void Handle_Input_Action(SDL_Event events, SDL_Renderer* screen, Mix_Chunk* bullet_sound[0]);
         void set_clips();
         SDL_Rect GetRectFrame();
         int get_width_frame() const {return width_frame_;}
@@ -31,7 +29,7 @@ class Player : public Object{
 
         void set_bullet_list(vector<Bullet*> bullet_list){p_bullet_list_ = bullet_list;}
         vector<Bullet*> get_bullet_list() const {return p_bullet_list_;}
-        void HandleBullet(SDL_Renderer* des);
+        void HandleBullet(SDL_Renderer* des, Map& map_data);
         void RemoveBullet(const int& idx);
         void IncreaseCoin();
         int get_coin_count() const {return coin_count;}
@@ -39,27 +37,20 @@ class Player : public Object{
         void set_comeback_time(const int& cb_time){come_back_time_ = cb_time;}
 
     private:
-        vector<Bullet*> p_bullet_list_; // bang dan cua player
+        vector<Bullet*> p_bullet_list_;
         int coin_count;
-
-        float x_val_; // vi tri di chuyen theo phuong x
-        float y_val_;
-        
-        float x_pos_; // vi tri hien tai cua player
-        float y_pos_;
-        
-        int width_frame_;
-        int height_frame_;
+        float x_val_, y_val_;
+        float x_pos_, y_pos_;
+        int width_frame_, height_frame_;
 
         SDL_Rect frame_clip_[PLAYER_FRAME];
-        Input input_type_; // bien luu trang thai player
+        Input input_type_;
         int frame_;
-        int status_; // trang thai cua player
+        int status_;
         bool on_ground_;
 
         // luu vi tri ban do
-        int map_x_;
-        int map_y_;
+        int map_x_, map_y_;
 
         int come_back_time_;
 };
