@@ -18,6 +18,7 @@ static SDL_Event g_event;
 static Mix_Chunk* g_sound_bullet[BULLET_SOUND];
 static Mix_Chunk* g_sound_exp = NULL;
 static Mix_Chunk* g_sound_exp_player = NULL;
+static Mix_Chunk* g_sound_life = NULL;
 
 //screen
 #define SCREEN_WIDTH 1280
@@ -31,28 +32,33 @@ static Mix_Chunk* g_sound_exp_player = NULL;
 #define DISPLAY_HEIGHT 40
 #define OUTLINE_WIDTH 1
 
-// game play
+// gameplay time
 #define FPS 60
-#define TIME_TOTAL 300
+#define TIME_TOTAL 1000 //120
 #define GAMEOVER 500
+#define FIRING_DELAY 300
+
+// player's physics
+#define GRAVITY 1
+#define PLAYER_SPEED 11
+#define PLAYER_JUMP_VAL 20
+#define MAX_FALL_SPEED 10
+#define DECLINE_BULLET 0.25 // increase to decline bullet
+
+// player's resurection
+#define RESPAWN 9
+#define COMEBACK_TIME 100
+#define LIFE 2
+#define COIN_PER_LIFE 10
 
 //map properties
 #define TILE_SIZE 64
 #define MAX_MAP_X 400
 #define MAX_MAP_Y 10
-#define MAX_TILES 10 // number of block's type
+#define MAX_TILES 10
 #define BLANK_TILE 0
 #define COIN_TILE 4
-
-// properties for player
-#define GRAVITY 1
-#define PLAYER_SPEED 14 // also bullet speed
-#define PLAYER_JUMP_VAL 20
-#define MAX_FALL_SPEED 10
-#define COMEBACK_TIME 100
-#define DECLINE_BULLET 0.25 // increase to decline bullet
-#define LIFE 3
-#define RESPAWN 9
+#define FLAG_TILE 8
 
 // frame
 #define EXPLOSION_FRAME 8
@@ -60,14 +66,14 @@ static Mix_Chunk* g_sound_exp_player = NULL;
 #define ENEMY_FRAME 8
 
 // enemy
+#define ENEMY_TYPE 2
 #define ENEMY_SPEED 3
-#define ENEMY_OBJECT 20 // number of enemy
+#define ENEMY_OBJECT 20
 #define MAX_BULLET_DIS 400
 
 struct Map{
     int start_x_;
     int start_y_;
-
     int max_x_;
     int max_y_;
 

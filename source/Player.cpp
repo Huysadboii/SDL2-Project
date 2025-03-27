@@ -51,9 +51,9 @@ void Player::set_clips(){
 void Player::Show(SDL_Renderer* des){
 
     if(status_ == WALK_LEFT){
-        LoadImg("img//player_left.png", des);
+        LoadImg("img//player_left2.png", des);
     } else {
-        LoadImg("img//player_right.png", des);
+        LoadImg("img//player_right2.png", des);
     }
     
     if(input_type_.left_ == 1 || input_type_.right_ == 1){
@@ -73,53 +73,51 @@ void Player::Show(SDL_Renderer* des){
 }
 
 void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen, Mix_Chunk* bullet_sound[0]){
-    
+        
     if(events.type == SDL_KEYDOWN){
-
         switch(events.key.keysym.sym){
             case SDLK_d:
-                status_ = WALK_RIGHT;
-                input_type_.right_ = 1;
-                input_type_.left_ = 0;
-                break;
-            case SDLK_a:
-                status_ = WALK_LEFT;
-                input_type_.left_ = 1;
-                input_type_.right_ = 0;
-                break;
-            case SDLK_SPACE:
-                input_type_.jump_ = 1;
-                break;
-        }
+            status_ = WALK_RIGHT;
+            input_type_.right_ = 1;
+            input_type_.left_ = 0;
+            break;
 
-    } 
+            case SDLK_a:
+            status_ = WALK_LEFT;
+            input_type_.left_ = 1;
+            input_type_.right_ = 0;
+            break;
+
+            case SDLK_SPACE:
+            input_type_.jump_ = 1;
+            break;
+        }
+    }
     
     else if(events.type == SDL_KEYUP){
-
         switch(events.key.keysym.sym){
             case SDLK_d:
-                input_type_.right_ = 0;
-                break;
-            case SDLK_a:
-                input_type_.left_ = 0;
-                break;
-        }
+            input_type_.right_ = 0;
+            break;
 
+            case SDLK_a:
+            input_type_.left_ = 0;
+            break;
+        }
     }
 
     else if(events.type == SDL_MOUSEBUTTONDOWN){
 
         if(events.button.button == SDL_BUTTON_LEFT){
-
+            Uint32 currentTime = SDL_GetTicks();
             Bullet* p_bullet = new Bullet();
-            int ret = Mix_PlayChannel(-1, bullet_sound[0], 0);
-
+            
             if(status_ == WALK_LEFT){
                 p_bullet->LoadImg("img//leftBullet.png", screen);
                 p_bullet->set_bullet_direction(Bullet::DIR_LEFT);
                 p_bullet->SetRect(this->rect_.x, 
                     this->rect_.y + height_frame_*DECLINE_BULLET);
-            } else {
+                } else {
                 p_bullet->LoadImg("img//rightBullet.png", screen);
                 p_bullet->set_bullet_direction(Bullet::DIR_RIGHT);
                 p_bullet->SetRect(this->rect_.x + width_frame_ - 20, 
@@ -128,7 +126,11 @@ void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen, Mix_Chu
 
             p_bullet->set_x_val(2*PLAYER_SPEED);
             p_bullet->set_is_move(true);
-            p_bullet_list_.push_back(p_bullet);
+            if(currentTime - lastShotTime > SHOOT_DELAY){
+                if(come_back_time_ == 0) int ret = Mix_PlayChannel(-1, bullet_sound[0], 0);
+                lastShotTime = currentTime;
+                p_bullet_list_.push_back(p_bullet);
+            }
 
         }
 
@@ -139,14 +141,13 @@ void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen, Mix_Chu
 void Player::HandleBullet(SDL_Renderer* des, Map& map_data){
 
     for(int i=0; i<p_bullet_list_.size(); i++){
-
         Bullet* p_bullet = p_bullet_list_.at(i);
-
         if(p_bullet != NULL){
 
             if(p_bullet->get_is_move()){
-                p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT, map_data);
+                p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
                 p_bullet->Render(des);
+
             } else {
                 p_bullet_list_.erase(p_bullet_list_.begin() + i);
                 if(p_bullet != NULL){
@@ -154,11 +155,8 @@ void Player::HandleBullet(SDL_Renderer* des, Map& map_data){
                     p_bullet = NULL;
                 }
             }
-
         }
-
     }
-
 }
 
 void Player::RemoveBullet(const int& idx){
@@ -200,7 +198,6 @@ void Player::DoPlayer(Map& map_data){
 
     else if(come_back_time_ > 0){
         come_back_time_--;
-
         if(come_back_time_ == 0){
 
             if(x_pos_ > RESPAWN*TILE_SIZE){
@@ -215,9 +212,7 @@ void Player::DoPlayer(Map& map_data){
             y_val_ = 0;
 
         }
-
     }
-
 }
 
 void Player::CenterEntityOnMap(Map& map_data){
@@ -236,6 +231,25 @@ void Player::CenterEntityOnMap(Map& map_data){
     }
 }
 
+bool Player::FinishMap(Map& map_data){
+    int height_min = height_frame_ < TILE_SIZE ? height_frame_ : TILE_SIZE;
+    int x1 = (x_pos_ + x_val_)/TILE_SIZE;
+    int x2 = (x_pos_ + x_val_ + width_frame_ - 1)/TILE_SIZE;
+    int y1 = (y_pos_)/TILE_SIZE;
+    int y2 = (y_pos_ + height_min - 1)/TILE_SIZE;
+
+    if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y){
+        if(x_val_ > 0){
+            int val1 = map_data.tile[y1][x2];
+            int val2 = map_data.tile[y2][x2];
+            if(val1 == FLAG_TILE || val2 == FLAG_TILE){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void Player::CheckToMap(Map& map_data){
     // check horizontal
     int height_min = height_frame_ < TILE_SIZE ? height_frame_ : TILE_SIZE;
@@ -243,7 +257,7 @@ void Player::CheckToMap(Map& map_data){
     int x2 = (x_pos_ + x_val_ + width_frame_ - 1)/TILE_SIZE;
     int y1 = (y_pos_)/TILE_SIZE;
     int y2 = (y_pos_ + height_min - 1)/TILE_SIZE;
-    // check player co nam trong ban do hay khong
+    
     if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y){
 
         if(x_val_ > 0){
@@ -323,13 +337,11 @@ void Player::CheckToMap(Map& map_data){
 
     x_pos_ += x_val_;
     y_pos_ += y_val_;
-
     if(x_pos_ < 0){
         x_pos_ = 0;
     } else if(x_pos_ + width_frame_ > map_data.max_x_){
         x_pos_ = map_data.max_x_ - width_frame_ - 1;
     }
-
     if(y_pos_ > map_data.max_y_){
         come_back_time_ = COMEBACK_TIME;
     }

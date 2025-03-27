@@ -27,7 +27,7 @@ class Enemy : public Object{
 
         enum TypeMove{
             STATIC = 0,
-            MOVE_IN_SPACE = 1, // trong 1 pham vi
+            MOVE_IN_SPACE = 1,
             MOVE_ON_GROUND = 2
         };
         void set_type_move(const int& type_move){ type_move_ = type_move; }

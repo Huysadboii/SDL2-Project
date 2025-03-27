@@ -16,12 +16,8 @@ void GameMap::LoadMap(char* name){
             fscanf(fp, "%d", &game_map_.tile[i][j]);
             int val = game_map_.tile[i][j];
             if(val > 0){
-                if(j > game_map_.max_x_){
-                    game_map_.max_x_ = j;
-                }
-                if(i > game_map_.max_y_){
-                    game_map_.max_y_ = i;
-                }
+                if(j > game_map_.max_x_){ game_map_.max_x_ = j; }
+                if(i > game_map_.max_y_){ game_map_.max_y_ = i; }
             }
         }
     }
@@ -42,9 +38,7 @@ void GameMap::LoadTiles(SDL_Renderer* screen){
     for(int i = 0; i < MAX_TILES; i++){
         sprintf_s(file_img, "map/%d.png", i);
         fopen_s(&fp, file_img, "rb");
-        if(fp == NULL){
-            continue;
-        }
+        if(fp == NULL){ continue; }
         fclose(fp);
         tile_mat[i].LoadImg(file_img, screen);
     }
@@ -52,25 +46,19 @@ void GameMap::LoadTiles(SDL_Renderer* screen){
 
 // fill hinh anh vao cac o vuong
 void GameMap::DrawMap(SDL_Renderer* screen){
-    int x1=0; //fill tu dau den dau
-    int x2=0;
-    int y1=0;
-    int y2=0;
-    
-    int map_x = 0;
-    int map_y = 0;
+    int x1=0, x2=0;
+    int y1=0, y2=0;
+    int map_x = 0, map_y = 0;
     
     map_x = game_map_.start_x_ / TILE_SIZE;
     x1 = (game_map_.start_x_ % TILE_SIZE) *-1 ;
     x2 = x1 + SCREEN_WIDTH + (x1 == 0 ? 0 : TILE_SIZE);
-
     map_y = game_map_.start_y_ / TILE_SIZE;
     y1 = (game_map_.start_y_ % TILE_SIZE) *-1 ;
     y2 = y1 + SCREEN_HEIGHT + (y1 == 0 ? 0 : TILE_SIZE);
 
     //fill
     for(int i = y1; i < y2; i += TILE_SIZE){
-
         map_x = game_map_.start_x_ / TILE_SIZE;
 
         for(int j = x1; j < x2; j += TILE_SIZE){
@@ -79,7 +67,6 @@ void GameMap::DrawMap(SDL_Renderer* screen){
                 tile_mat[val].SetRect(j , i );
                 tile_mat[val].Render(screen);
             }
-
             map_x++;
         }
 
@@ -100,38 +87,22 @@ bool Collision::CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2)
 
     // case 1: size object 1 < size object 2
     if(left_a > left_b && left_a < right_b){
-        if(top_a > top_b && top_a < bottom_b){
-            return true;
-        }
-        if(bottom_a > top_b && bottom_a < bottom_b){
-            return true;
-        }
+        if(top_a > top_b && top_a < bottom_b){ return true; }
+        if(bottom_a > top_b && bottom_a < bottom_b){ return true; }
     }
     if(right_a > left_b && right_a < right_b){
-        if(top_a > top_b && top_a < bottom_b){
-            return true;
-        }
-        if(bottom_a > top_b && bottom_a < bottom_b){
-            return true;
-        }
+        if(top_a > top_b && top_a < bottom_b){ return true; }
+        if(bottom_a > top_b && bottom_a < bottom_b){ return true; }
     }
 
     // case 2: size object 1 > size object 2
     if(left_b > left_a && left_b < right_a){
-        if(top_b > top_a && top_b < bottom_a){
-            return true;
-        }
-        if(bottom_b > top_a && bottom_b < bottom_a){
-            return true;
-        }
+        if(top_b > top_a && top_b < bottom_a){ return true; }
+        if(bottom_b > top_a && bottom_b < bottom_a){ return true; }
     }
     if(right_b > left_a && right_b < right_a){
-        if(top_b > top_a && top_b < bottom_a){
-            return true;
-        }
-        if(bottom_b > top_a && bottom_b < bottom_a){
-            return true;
-        }
+        if(top_b > top_a && top_b < bottom_a){ return true; }
+        if(bottom_b > top_a && bottom_b < bottom_a){ return true; }
     }
 
     //case 3: size object 1 = size object 2

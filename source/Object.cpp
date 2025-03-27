@@ -2,10 +2,8 @@
 
 Object::Object(){
     p_object_ = NULL;
-    rect_.x = 0;
-    rect_.y = 0;
-    rect_.w = 0;
-    rect_.h = 0;
+    rect_.x = 0; rect_.y = 0;
+    rect_.w = 0; rect_.h = 0;
 }
 
 Object::~Object(){ Free(); }
@@ -30,14 +28,13 @@ bool Object::LoadImg(string path, SDL_Renderer* screen){
     }
 
     p_object_ = new_texture;
-
     return p_object_ != NULL;
 }
 
 void Object::Render(SDL_Renderer* des, const SDL_Rect* clip) {
-    // position, size of the image
+    // vi tri, kich thuoc hinh anh
     SDL_Rect renderquad = { rect_.x, rect_.y, rect_.w, rect_.h }; 
-    // Push the player's parameters to the destination with the renderquad data
+    // Đẩy các tham số của người chơi vào với dữ liệu renderquad
     SDL_RenderCopy(des, p_object_, clip, &renderquad); 
 }
 

@@ -19,7 +19,9 @@ bool InitData(){
     g_sound_bullet[0] = Mix_LoadWAV("sound//Fire1.wav");
     g_sound_exp = Mix_LoadWAV("sound//Explosion1.wav");
     g_sound_exp_player = Mix_LoadWAV("sound//Explosion1.wav");
-    if(g_sound_bullet[0] == NULL || g_sound_exp == NULL || g_sound_exp_player == NULL){ success = false; }
+    g_sound_life = Mix_LoadWAV("sound//two_beep.wav");
+    if(g_sound_bullet[0] == NULL || g_sound_exp == NULL || g_sound_exp_player == NULL || g_sound_life == NULL)
+    { success = false; }
     
     // window
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
@@ -117,8 +119,8 @@ int main(int argc, char* argv[])
     p_player.LoadImg("img//player_right.png", g_screen);
     p_player.set_clips(); // hieu ung chuyen dong
 
-    Display display_score;
-    display_score.Init(g_screen);
+    Display display_life;
+    display_life.Init(g_screen);
     DisplayCoin display_coin;
     display_coin.Init(g_screen);
     display_coin.SetPos(SCREEN_WIDTH*0.5 - 300, 8);
@@ -133,7 +135,7 @@ int main(int argc, char* argv[])
     bool mRet = exp_main.LoadImg("img//explode.png", g_screen);
     if(!mRet){ return -1; }
     exp_main.set_clip();
-    int num_eliminated = 0;
+    int num_eliminated = 1;
 
     Text time_count;
     time_count.SetColor(Text::WHITE_TEXT);
@@ -142,6 +144,7 @@ int main(int argc, char* argv[])
     UINT score_value = 0;
     Text coin_count;
     coin_count.SetColor(Text::WHITE_TEXT);
+    int life_added = 0;
 
     bool is_quit = false;
     while(!is_quit){
@@ -160,8 +163,15 @@ int main(int argc, char* argv[])
         p_player.HandleBullet(g_screen, map_data);
         p_player.SetMapXY(map_data.start_x_, map_data.start_y_);
         p_player.DoPlayer(map_data);
+        if(p_player.FinishMap(map_data)){
+            SDL_Delay(GAMEOVER);
+            if(MessageBox(NULL, "YOU WIN", "Congratulation", MB_OK | MB_ICONINFORMATION) == IDOK){
+                is_quit = true;
+                break;
+            }
+        }
+        
         p_player.Show(g_screen);
-
         game_map.SetMap(map_data);
         game_map.DrawMap(g_screen);
 
@@ -172,7 +182,7 @@ int main(int argc, char* argv[])
         ColorDat color2(RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
         AssistDisplay::RenderOutline(outLine, color2, g_screen);
 
-        display_score.Show(g_screen);
+        display_life.Show(g_screen);
         display_coin.Show(g_screen);
 
         // xu li: va cham voi player
@@ -211,6 +221,7 @@ int main(int argc, char* argv[])
                         exp_main.Show(g_screen);
                         SDL_RenderPresent(g_screen);
                     }
+
                     if(bCol2){
                         p_threat->Free();
                         enemies.erase(enemies.begin() + i);
@@ -218,11 +229,12 @@ int main(int argc, char* argv[])
                     }
                     Mix_PlayChannel(-1, g_sound_exp_player, 0);
                     num_eliminated++;
+                    display_life.Decrease();
+                    display_life.Render(g_screen);
+
                     if(num_eliminated <= LIFE){
                         p_player.SetRect(0, 0);
                         p_player.set_comeback_time(COMEBACK_TIME);
-                        display_score.Decrease();
-                        display_score.Render(g_screen);
                         continue;
                     } else{
                         SDL_Delay(GAMEOVER);
@@ -243,12 +255,12 @@ int main(int argc, char* argv[])
         vector<Bullet*> bullet_arr = p_player.get_bullet_list();
         for(int i = 0; i < bullet_arr.size(); i++){
             Bullet* p_bullet = bullet_arr.at(i);
-
             if(p_bullet != NULL){
+
                 for(int j=0; j<enemies.size(); j++){
                     Enemy* enemy = enemies.at(j);
-
                     if(enemy != NULL){
+
                         SDL_Rect eRect;
                         eRect.x = enemy->GetRect().x;
                         eRect.y = enemy->GetRect().y;
@@ -258,7 +270,6 @@ int main(int argc, char* argv[])
                         SDL_Rect bRect = p_bullet->GetRect();
                         bool bCol = Collision::CheckCollision(bRect, eRect);
                         if(bCol){
-                            score_value++;
                             for(int i=0; i<EXPLOSION_FRAME; i++){
                                 // ban dau vi tri o mep => tru di 1 nua frame
                                 int x_pos = p_bullet->GetRect().x - frame_exp_width*0.5;
@@ -267,7 +278,8 @@ int main(int argc, char* argv[])
                                 exp_enemy.SetRect(x_pos, y_pos);
                                 exp_enemy.Show(g_screen);
                             }
-
+                            
+                            score_value++;
                             Mix_PlayChannel(-1, g_sound_exp, 0);
                             p_bullet->Free();
                             p_player.RemoveBullet(i);
@@ -300,27 +312,22 @@ int main(int argc, char* argv[])
 
         // show score
         string strScore("Score: ");
-        strScore = strScore + to_string(score_value) + "/" + to_string(2*ENEMY_OBJECT);
-
-        if(score_value == 2*ENEMY_OBJECT){
-            enemies.back()->Free();
-            enemies.pop_back();
-            SDL_Delay(GAMEOVER);
-            if(MessageBox(NULL, "YOU WIN", "Congratulation", MB_OK | MB_ICONINFORMATION) == IDOK){
-                is_quit = true;
-                break;
-            }
-        } else if (score_value > ENEMY_OBJECT){
-            score_game.SetColor(Text::RED_TEXT);
-        }
-
+        strScore = strScore + to_string(score_value) + "/" + to_string(ENEMY_TYPE*ENEMY_OBJECT);
+        if (score_value > ENEMY_TYPE*ENEMY_OBJECT/2){ score_game.SetColor(Text::RED_TEXT); }
         score_game.SetText(strScore);
         score_game.LoadFromRenderText(font_time, g_screen);
         score_game.RenderText(g_screen, SCREEN_WIDTH*0.5 - 50, TEXT_FONT);
 
         // show coin
-        int coin_count_val = p_player.get_coin_count();
-        string str_coin_count = to_string(coin_count_val);
+        int coin_count_val = p_player.get_coin_count() - life_added*COIN_PER_LIFE;
+        string str_coin_count = to_string(coin_count_val) + "/" + to_string(COIN_PER_LIFE);
+        if(coin_count_val >= COIN_PER_LIFE){
+            num_eliminated--;
+            life_added++;
+            display_life.Increase();
+            display_life.Render(g_screen);
+            Mix_PlayChannel(-1, g_sound_life, 0);
+        }
         coin_count.SetText(str_coin_count);
         coin_count.LoadFromRenderText(font_time, g_screen);
         coin_count.RenderText(g_screen, SCREEN_WIDTH*0.5 - 250, TEXT_FONT);

@@ -17,8 +17,8 @@ class Object
 
     protected:
         SDL_Texture* p_object_;
-        SDL_Rect rect_; // position of object
-        // pos is the position on the whole map
+        SDL_Rect rect_; // vi tri cua object
+        // pos la vi tri tren ca map
 };
 
 #endif

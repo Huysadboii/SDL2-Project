@@ -26,6 +26,7 @@ class Player : public Object{
         void CheckToMap(Map& map_data);
         void SetMapXY(const int map_x, const int map_y){map_x_ = map_x; map_y_ = map_y;};
         void CenterEntityOnMap(Map& map_data);
+        bool FinishMap(Map& map_data);
 
         void set_bullet_list(vector<Bullet*> bullet_list){p_bullet_list_ = bullet_list;}
         vector<Bullet*> get_bullet_list() const {return p_bullet_list_;}
@@ -51,8 +52,9 @@ class Player : public Object{
 
         // luu vi tri ban do
         int map_x_, map_y_;
-
         int come_back_time_;
+        const Uint32 SHOOT_DELAY = FIRING_DELAY;
+        Uint32 lastShotTime = 0;
 };
 
 #endif
