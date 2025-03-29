@@ -36,6 +36,7 @@ class Player : public Object{
         int get_coin_count() const {return coin_count;}
 
         void set_comeback_time(const int& cb_time){come_back_time_ = cb_time;}
+        bool CheckFall(Map& map_data);
 
     private:
         vector<Bullet*> p_bullet_list_;
@@ -49,11 +50,12 @@ class Player : public Object{
         int frame_;
         int status_;
         bool on_ground_;
+        bool falled = false;
 
         // luu vi tri ban do
         int map_x_, map_y_;
         int come_back_time_;
-        const Uint32 SHOOT_DELAY = FIRING_DELAY;
+        Uint32 shoot_delay = FIRING_DELAY;
         Uint32 lastShotTime = 0;
 };
 

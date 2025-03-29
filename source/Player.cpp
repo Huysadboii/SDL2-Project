@@ -15,6 +15,8 @@ Player::Player(){
     on_ground_ = false;
     come_back_time_ = 0;
     coin_count = 0;
+    lastShotTime = 0;
+    shoot_delay = FIRING_DELAY;
 }
 
 Player::~Player(){}
@@ -126,7 +128,7 @@ void Player::Handle_Input_Action(SDL_Event events, SDL_Renderer* screen, Mix_Chu
 
             p_bullet->set_x_val(2*PLAYER_SPEED);
             p_bullet->set_is_move(true);
-            if(currentTime - lastShotTime > SHOOT_DELAY){
+            if(currentTime - lastShotTime > shoot_delay){
                 if(come_back_time_ == 0) int ret = Mix_PlayChannel(-1, bullet_sound[0], 0);
                 lastShotTime = currentTime;
                 p_bullet_list_.push_back(p_bullet);
@@ -199,6 +201,11 @@ void Player::DoPlayer(Map& map_data){
     else if(come_back_time_ > 0){
         come_back_time_--;
         if(come_back_time_ == 0){
+            
+            y_pos_ = 0;
+            x_val_ = 0;
+            y_val_ = 0;
+            falled = false;
 
             if(x_pos_ > RESPAWN*TILE_SIZE){
                 x_pos_ -= RESPAWN*TILE_SIZE;
@@ -206,10 +213,6 @@ void Player::DoPlayer(Map& map_data){
             } else {
                 x_pos_ = 0;
             }
-
-            y_pos_ = 0;
-            x_val_ = 0;
-            y_val_ = 0;
 
         }
     }
@@ -246,6 +249,30 @@ bool Player::FinishMap(Map& map_data){
                 return true;
             }
         }
+    }
+    
+    int width_min = width_frame_ < TILE_SIZE ? width_frame_ : TILE_SIZE;
+    x1 = (x_pos_)/TILE_SIZE;
+    x2 = (x_pos_ + width_min )/TILE_SIZE;
+    y1 = (y_pos_ + y_val_)/TILE_SIZE;
+    y2 = (y_pos_ + y_val_ + height_frame_ - 1)/TILE_SIZE;
+
+    if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y){
+        if(y_val_ > 0){
+            int val1 = map_data.tile[y2][x1];
+            int val2 = map_data.tile[y2][x2];
+            if(val1 == FLAG_TILE || val2 == FLAG_TILE){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Player::CheckFall(Map& map_data){
+    if(y_pos_ >= map_data.max_y_ && come_back_time_ == 0 && falled == false){
+        falled = true;
+        return true;
     }
     return false;
 }

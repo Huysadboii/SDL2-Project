@@ -24,19 +24,37 @@ static Mix_Chunk* g_sound_life = NULL;
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 640
 #define SCREEN_BPP 32
-#define TEXT_FONT 20
+#define DISPLAY_HEIGHT 50
+#define OUTLINE_WIDTH 1
 #define COLOR_KEY_R 167
 #define COLOR_KEY_G 175
 #define COLOR_KEY_B 180
 #define RENDER_DRAW_COLOR 255
-#define DISPLAY_HEIGHT 40
-#define OUTLINE_WIDTH 1
+
+// text pos in gameplay
+#define TEXT_FONT 20
+#define POS_OF_COIN 340
+#define POS_OF_TIME 1080
+#define POS_OF_TEXT 250
+#define POS_OF_SCORE 800
+
+// text pos in menu
+#define OVER_SCORE_POS 500
+#define POS_OF_MENU 330
+#define POS_OF_MENU_2 400
+
+// height text
+#define SCORE_HEIGHT 150
+#define MENU_HEIGHT_0 220
+#define MENU_HEIGHT_1 260
+#define MENU_HEIGHT_2 300
+#define MENU_HEIGHT_3 340
 
 // gameplay time
 #define FPS 60
 #define TIME_TOTAL 1000 //120
 #define GAMEOVER 500
-#define FIRING_DELAY 300
+#define FIRING_DELAY 3
 
 // player's physics
 #define GRAVITY 1
@@ -66,10 +84,11 @@ static Mix_Chunk* g_sound_life = NULL;
 #define ENEMY_FRAME 8
 
 // enemy
-#define ENEMY_TYPE 2
+#define ENEMY_OBJECT_GUNNER 30
+#define ENEMY_OBJECT_STATIC 30
+#define TOTAL_ENEMY ENEMY_OBJECT_GUNNER + ENEMY_OBJECT_STATIC
 #define ENEMY_SPEED 3
-#define ENEMY_OBJECT 20
-#define MAX_BULLET_DIS 400
+#define MAX_BULLET_DIS 500
 
 struct Map{
     int start_x_;
