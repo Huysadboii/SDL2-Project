@@ -241,7 +241,7 @@ int main(int argc, char* argv[])
 
             bool is_quit = false;
             int life_added = 0;
-            int num_eliminated = 1;
+            int num_eliminated = 0;
             Uint32 start_time = 0;
             score_value = 0;
 
@@ -307,7 +307,7 @@ int main(int argc, char* argv[])
                     num_eliminated++;
                     display_life.Decrease();
                     display_life.Render(g_screen);
-                    if(num_eliminated <= LIFE){
+                    if(num_eliminated < LIFE){
                         p_player.SetRect(0, 0);
                         p_player.set_comeback_time(COMEBACK_TIME);
                         continue;
@@ -384,7 +384,7 @@ int main(int argc, char* argv[])
                             display_life.Decrease();
                             display_life.Render(g_screen);
         
-                            if(num_eliminated <= LIFE){
+                            if(num_eliminated < LIFE){
                                 p_player.SetRect(0, 0);
                                 p_player.set_comeback_time(COMEBACK_TIME);
                                 continue;
@@ -468,7 +468,7 @@ int main(int argc, char* argv[])
                 // show score
                 string strScore("Score: ");
                 strScore = strScore + to_string(score_value) + "/";
-                strScore += to_string(ENEMY_OBJECT_GUNNER + ENEMY_OBJECT_STATIC);
+                strScore += to_string(TOTAL_ENEMY);
                 if (score_value > (TOTAL_ENEMY)/2)
                     { score_game.SetColor(Text::RED_TEXT); }
                 score_game.SetText(strScore);
