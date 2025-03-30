@@ -58,7 +58,7 @@ static Mix_Chunk* g_theme = NULL;
 
 // gameplay time
 #define FPS 60
-#define TIME_TOTAL 1000
+#define TIME_TOTAL 120
 #define GAMEOVER 500
 #define FIRING_DELAY 300
 
@@ -94,7 +94,7 @@ static Mix_Chunk* g_theme = NULL;
 #define ENEMY_OBJECT_STATIC 30
 #define TOTAL_ENEMY ENEMY_OBJECT_GUNNER + ENEMY_OBJECT_STATIC
 #define ENEMY_SPEED 2
-#define MAX_BULLET_DIS 300
+#define MAX_BULLET_DIS 500
 
 struct Map{
     int start_x_;
