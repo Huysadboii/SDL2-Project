@@ -2,8 +2,6 @@
 
 Display::Display(){
     num_ = 0;
-    pos_list_.push_back(0);
-    pos_list_.push_back(0);
 }
 
 Display::~Display(){}

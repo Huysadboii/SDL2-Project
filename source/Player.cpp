@@ -61,8 +61,8 @@ void Player::Show(SDL_Renderer* des){
     if(input_type_.left_ == 1 || input_type_.right_ == 1){
         frame_++;
     } else { frame_ = 0; }
-    
     if(frame_ >= PLAYER_FRAME){ frame_ = 0; }
+    
     if(come_back_time_ == 0){
         rect_.x = x_pos_ - map_x_;
         rect_.y = y_pos_ - map_y_;
@@ -200,12 +200,14 @@ void Player::DoPlayer(Map& map_data){
 
     else if(come_back_time_ > 0){
         come_back_time_--;
+        stop_count = true;
         if(come_back_time_ == 0){
             
             y_pos_ = 0;
             x_val_ = 0;
             y_val_ = 0;
             falled = false;
+            stop_count = false;
 
             if(x_pos_ > RESPAWN*TILE_SIZE){
                 x_pos_ -= RESPAWN*TILE_SIZE;
@@ -265,14 +267,6 @@ bool Player::FinishMap(Map& map_data){
                 return true;
             }
         }
-    }
-    return false;
-}
-
-bool Player::CheckFall(Map& map_data){
-    if(y_pos_ >= map_data.max_y_ && come_back_time_ == 0 && falled == false){
-        falled = true;
-        return true;
     }
     return false;
 }
@@ -371,6 +365,7 @@ void Player::CheckToMap(Map& map_data){
     }
     if(y_pos_ > map_data.max_y_){
         come_back_time_ = COMEBACK_TIME;
+        falled = true;
     }
 }
 

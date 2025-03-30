@@ -14,11 +14,13 @@ static SDL_Window* g_window = NULL;
 static SDL_Renderer* g_screen = NULL;
 static SDL_Event g_event;
 
+// audio
 #define BULLET_SOUND 1
 static Mix_Chunk* g_sound_bullet[BULLET_SOUND];
 static Mix_Chunk* g_sound_exp = NULL;
 static Mix_Chunk* g_sound_exp_player = NULL;
 static Mix_Chunk* g_sound_life = NULL;
+static Mix_Chunk* g_theme = NULL;
 
 //screen
 #define SCREEN_WIDTH 1280
@@ -39,22 +41,26 @@ static Mix_Chunk* g_sound_life = NULL;
 #define POS_OF_SCORE 800
 
 // text pos in menu
-#define OVER_SCORE_POS 500
 #define POS_OF_MENU 330
-#define POS_OF_MENU_2 400
-
-// height text
+#define OVER_SCORE_POS 500
+#define WIN_SCORE_POS 400
+#define POS_OF_INS 20
+// height menu text
+#define TEXT_DIS 40
 #define SCORE_HEIGHT 150
-#define MENU_HEIGHT_0 220
-#define MENU_HEIGHT_1 260
-#define MENU_HEIGHT_2 300
-#define MENU_HEIGHT_3 340
+#define MENU_HEIGHT 260
+#define INS_HEIGHT 20
+#define ESCAPE_HEIGHT 600
+// menu lines
+#define MENU_LINE 3
+#define OVER_LINE 2
+#define INSTRUCTIONS_LINE 9
 
 // gameplay time
 #define FPS 60
-#define TIME_TOTAL 1000 //120
+#define TIME_TOTAL 1000
 #define GAMEOVER 500
-#define FIRING_DELAY 3
+#define FIRING_DELAY 300
 
 // player's physics
 #define GRAVITY 1
@@ -87,8 +93,8 @@ static Mix_Chunk* g_sound_life = NULL;
 #define ENEMY_OBJECT_GUNNER 30
 #define ENEMY_OBJECT_STATIC 30
 #define TOTAL_ENEMY ENEMY_OBJECT_GUNNER + ENEMY_OBJECT_STATIC
-#define ENEMY_SPEED 3
-#define MAX_BULLET_DIS 500
+#define ENEMY_SPEED 2
+#define MAX_BULLET_DIS 300
 
 struct Map{
     int start_x_;

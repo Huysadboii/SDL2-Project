@@ -5,8 +5,8 @@
 
 class Menu {
     public:
-        enum GameState { MENU, PLAYING, GAME_OVER, VICTORY };
-
+        enum GameState { MENU, PLAYING, GAME_OVER, VICTORY, INSTRUCTIONS };
+        GameState getCurrentState() const { return currentState; }
         Menu();
         ~Menu();
 
@@ -15,17 +15,20 @@ class Menu {
 
         void handleGameOverEvents(SDL_Event& event, GameState& state, bool& running);
         void renderGameOver(SDL_Renderer* renderer);
+
         void renderVictory(SDL_Renderer* renderer);
 
-
-        GameState getCurrentState() const { return currentState; }
+        void handleInstructionsEvents(SDL_Event& event, GameState& state, bool& running);
+        void renderInstructions(SDL_Renderer* renderer);
 
     private:
         GameState currentState;
+        SDL_Texture* loadTexture(std::string path, SDL_Renderer* renderer);
+
         SDL_Texture* menuTexture;
         SDL_Texture* gameOverTexture;
-
-        SDL_Texture* loadTexture(std::string path, SDL_Renderer* renderer);
+        SDL_Texture* victoryTexture;
+        SDL_Texture* instructionsTexture;
 };
 
 #endif

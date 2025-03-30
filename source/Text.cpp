@@ -1,7 +1,7 @@
 #include "Text.h"
 // xem lai
 Text::Text(){
-    text_color_ = {255, 255, 255};
+    text_color_ = {RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR};
     text_val_ = NULL;
 }
 
@@ -34,7 +34,7 @@ void Text::SetColor(int type){
         SDL_Color color = {255, 0, 0};
         text_color_ = color;
     } else if(type == WHITE_TEXT){
-        SDL_Color color = {255, 255, 255};
+        SDL_Color color = {RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR};
         text_color_ = color;
     } else if(type == BLACK_TEXT){
         SDL_Color color = {0, 0, 0};
