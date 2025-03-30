@@ -58,7 +58,7 @@ static Mix_Chunk* g_theme = NULL;
 
 // gameplay time
 #define FPS 60
-#define TIME_TOTAL 120
+#define TIME_TOTAL 180
 #define GAMEOVER 500
 #define FIRING_DELAY 300
 
@@ -75,6 +75,13 @@ static Mix_Chunk* g_theme = NULL;
 #define LIFE 2
 #define COIN_PER_LIFE 10
 
+// enemy
+#define ENEMY_OBJECT_GUNNER 30
+#define ENEMY_OBJECT_STATIC 30
+#define TOTAL_ENEMY ENEMY_OBJECT_GUNNER + ENEMY_OBJECT_STATIC
+#define ENEMY_SPEED 2
+#define MAX_BULLET_DIS 500
+
 //map properties
 #define TILE_SIZE 64
 #define MAX_MAP_X 400
@@ -88,13 +95,6 @@ static Mix_Chunk* g_theme = NULL;
 #define EXPLOSION_FRAME 8
 #define PLAYER_FRAME 8
 #define ENEMY_FRAME 8
-
-// enemy
-#define ENEMY_OBJECT_GUNNER 30
-#define ENEMY_OBJECT_STATIC 30
-#define TOTAL_ENEMY ENEMY_OBJECT_GUNNER + ENEMY_OBJECT_STATIC
-#define ENEMY_SPEED 2
-#define MAX_BULLET_DIS 500
 
 struct Map{
     int start_x_;
