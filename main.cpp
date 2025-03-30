@@ -101,6 +101,8 @@ vector<Enemy*> MakeEnemyList(){
             p_enemy->set_x_pos(10000 + i*500);
             p_enemy->set_y_pos(250);
             p_enemy->set_input_left(0);
+            Bullet* p_bullet = new Bullet();
+            p_enemy->InitBullet(p_bullet, g_screen, 2);
             list_enemies.push_back(p_enemy);
         }
     }

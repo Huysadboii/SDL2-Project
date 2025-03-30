@@ -58,13 +58,13 @@ static Mix_Chunk* g_theme = NULL;
 
 // gameplay time
 #define FPS 60
-#define TIME_TOTAL 180
+#define TIME_TOTAL 150
 #define GAMEOVER 500
 #define FIRING_DELAY 500
 
 // player's physics
 #define GRAVITY 1
-#define PLAYER_SPEED 11
+#define PLAYER_SPEED 12
 #define PLAYER_JUMP_VAL 20
 #define MAX_FALL_SPEED 10
 #define DECLINE_BULLET 0.25 // increase to decline bullet
@@ -76,8 +76,8 @@ static Mix_Chunk* g_theme = NULL;
 #define COIN_PER_LIFE 10
 
 // enemy
-#define MAX_BULLET_DIS 400
-#define ENEMY_SPEED 2
+#define MAX_BULLET_DIS 320
+#define ENEMY_SPEED 3
 #define ENEMY_OBJECT_GUNNER 30
 #define ENEMY_OBJECT_STATIC 30
 #define TOTAL_ENEMY ENEMY_OBJECT_GUNNER + ENEMY_OBJECT_STATIC
